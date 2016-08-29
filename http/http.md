@@ -6,14 +6,17 @@
 - HTTP/1.0由 RFC 1945 定义 , 在原 HTTP/0.9 的基础上, 有了进一步的改进, 允许消息以类 MIME 信息格式存在, 包括请求/响应范式中的已传输数据和修饰符等方面的信息
 - HTTP/1.1(RFC2616) 的要求更加严格以确保服务的可靠性, 增强了在HTTP/1.0 没有充分考虑到分层代理服务器、高速缓冲存储器、持久连接需求或虚拟主机等方面的效能
 - 安全增强版的 HTTP （即HTTPS）, 则是HTTP协议与安全套接口层(SSL)的结合, 使HTTP的协议数据在传输过程中更加安全. 
+
 ## 协议结构
 HTTP协议格式也比较简单, 格式如下
-![HTTP协议格式](/http/proto-fmt.png"HTTP协议格式")
+![HTTP协议格式](/http/proto-fmt.png "HTTP协议格式")
+
 ## HTTP协议举例
 - 下面是一个HTTP请求及响应的例子
-![HTTP协议示例](/http/proto-example.png"HTTP协议示例")
+![HTTP协议示例](/http/proto-example.png "HTTP协议示例")
 - 下面是浏览器中显示的格式
-![HTTP协议在浏览器中的显示格式](/http/proto-demo.png"HTTP协议在浏览器中的显示格式")
+![HTTP协议在浏览器中的显示格式](/http/proto-demo.png "HTTP协议在浏览器中的显示格式")
+
 ## 请求头格式
 - 通用头(general-header)
     - Connection: 客户端是否希望与服务端之间保持长连接, 如"Connection: close","Connection: keep-alive"
@@ -27,11 +30,12 @@ HTTP协议格式也比较简单, 格式如下
     - Accept-Charset: 客户端所能识别的字符集编码格式, 格式:"Accept-Charset: 字符集1[:权重], 字符集2[:权重]", 如:"Accept-Charset: iso-8859-5, unicode-1-1;q=0.8" 
     - Accept-Language: 客户端所能识别的语言, 格式:"Accept-Language: 语言1[:权重], 语言2[:权重]", 如:"Accept-Language: zh-CN, en;q=0.7" 
     - Accept-Encoding: 客户端所能识别的编码压缩格式, 如:"Accept-Encoding: gzip, deflate" 
-Pragma: 包含了客户端一些特殊请求信息, 如"Pragma: no-cache"客户端希望代理或应用服务器不应缓存与该请求相关的结果数据 
+    - Pragma: 包含了客户端一些特殊请求信息, 如"Pragma: no-cache"客户端希望代理或应用服务器不应缓存与该请求相关的结果数据 
 - 实体头(entity-header)-(此类头存在时要求有数据体)
     - Content-Encoding: 客户端所能识别的编码压缩格式, 如:"Content-Encoding: gzip, deflate" 
     - Content-Length: 客户端以POST方法上传数据时数据体部分的内容长度, 如:"Content-Length: 24" 
     - Content- Type: 客户端发送的数据体的内容类型, 如:"Content-Type: application/x-www-form-urlencoded"为以普通的POST方法发送的数据;"Content-Type: multipart/form-data; boundary=—————————5169208281820", 则表明数据体由多部分组成, 分隔符为"—————————–5169208281820" 
+
 ## 响应头格式
 - 通用头(general header)
     - Connection: 服务端是否希望与客户端之间保持长连接, 如"Connection: close","Connection: keep-alive"
@@ -49,13 +53,15 @@ Pragma: 包含了客户端一些特殊请求信息, 如"Pragma: no-cache"客户�
     - Content-Length: 服务端所返回数据的数据体部分的内容长度, 如:" Content-Length: 24"
     - Content-Type: 服务端所返回的数据体的内容类型, 如:"Content-Type: text/html; charset=utf-8"  
     - Set-Cookie: 服务端返回给客户端的cookie数据, 如:" Set-Cookie: ASP.NET_SessionId=icnh2ku2dqlmkciyobgvzl55; path=/"
+
 ## 服务器返回状态码
-- 1xx：表明服务端接收了客户端请求, 客户端继续发送请求
-- 2xx：客户端发送的请求被服务端成功接收并成功进行了处理
-- 3xx：服务端给客户端返回用于重定向的信息
-- 4xx：客户端的请求有非法内容
-- 5xx：服务端未能正常处理客户端的请求而出现意外错误
-- 举例：
+- 说明
+    - 1xx：表明服务端接收了客户端请求, 客户端继续发送请求
+    - 2xx：客户端发送的请求被服务端成功接收并成功进行了处理
+    - 3xx：服务端给客户端返回用于重定向的信息
+    - 4xx：客户端的请求有非法内容
+    - 5xx：服务端未能正常处理客户端的请求而出现意外错误
+- 举例
     - "100": 服务端希望客户端继续
     - "200": 服务端成功接收并处理了客户端的请求
     - "301": 客户端所请求的URL已经移走, 需要客户端重定向到其它的URL
