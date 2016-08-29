@@ -1,11 +1,11 @@
 # HTTP协议
 ## 简介
-- 超文本传输协议（Hypertext Transfer Protocol, 简称HTTP）是应用层协议, 自 1990 年起, HTTP 就已经被应用于 WWW 全球信息服务系统. 
-- HTTP 是一种请求/响应式的协议. 一个客户机与服务器建立连接后, 发送一个请求给服务器, 服务器接到请求后, 给予相应的响应信息. 
+- 超文本传输协议（Hypertext Transfer Protocol, 简称HTTP）是应用层协议, 自 1990 年起, HTTP 就已经被应用于 WWW 全球信息服务系统
+- HTTP 是一种请求/响应式的协议. 一个客户机与服务器建立连接后, 发送一个请求给服务器, 服务器接到请求后, 给予相应的响应信息
 - HTTP 的第一版本 HTTP/0.9是一种简单的用于网络间原始数据传输的协议
 - HTTP/1.0由 RFC 1945 定义 , 在原 HTTP/0.9 的基础上, 有了进一步的改进, 允许消息以类 MIME 信息格式存在, 包括请求/响应范式中的已传输数据和修饰符等方面的信息
 - HTTP/1.1(RFC2616) 的要求更加严格以确保服务的可靠性, 增强了在HTTP/1.0 没有充分考虑到分层代理服务器、高速缓冲存储器、持久连接需求或虚拟主机等方面的效能
-- 安全增强版的 HTTP （即HTTPS）, 则是HTTP协议与安全套接口层(SSL)的结合, 使HTTP的协议数据在传输过程中更加安全. 
+- 安全增强版的 HTTP （即HTTPS）, 则是HTTP协议与安全套接口层(SSL)的结合, 使HTTP的协议数据在传输过程中更加安全
 
 ## 协议结构
 HTTP协议格式也比较简单, 格式如下
@@ -14,10 +14,13 @@ HTTP协议格式也比较简单, 格式如下
 ## HTTP协议举例
 - 下面是一个HTTP请求及响应的例子
 ![HTTP协议示例](/http/proto-example.png "HTTP协议示例")
-- 下面是浏览器中显示的格式
+- 下面是浏览器中显示的格式  
 ![HTTP协议在浏览器中的显示格式](/http/proto-demo.png "HTTP协议在浏览器中的显示格式")
 
 ## 请求头格式
+- 请求行
+    - 请求方法  请求资源  协议版本 CRLF
+    - 示例: HTTP/1.1  200  OK
 - 通用头(general-header)
     - Connection: 客户端是否希望与服务端之间保持长连接, 如"Connection: close","Connection: keep-alive"
     - Date: 时间, 只有当请求方法为POST或PUT方法时客户端才可能会有些字段
@@ -37,6 +40,9 @@ HTTP协议格式也比较简单, 格式如下
     - Content- Type: 客户端发送的数据体的内容类型, 如:"Content-Type: application/x-www-form-urlencoded"为以普通的POST方法发送的数据;"Content-Type: multipart/form-data; boundary=—————————5169208281820", 则表明数据体由多部分组成, 分隔符为"—————————–5169208281820" 
 
 ## 响应头格式
+- 响应行
+    - 协议版本  状态码  描述信息 CRLF
+    - 示例: HTTP/1.1  200  OK
 - 通用头(general header)
     - Connection: 服务端是否希望与客户端之间保持长连接, 如"Connection: close","Connection: keep-alive"
     - Date: 响应时间, 只有当请求方法为POST或PUT方法时客户端才可能会有些字段 
@@ -52,7 +58,6 @@ HTTP协议格式也比较简单, 格式如下
     - Content-Encoding: 服务端所响应数据的编码格式, 如:"Content-Encoding: gzip"
     - Content-Length: 服务端所返回数据的数据体部分的内容长度, 如:" Content-Length: 24"
     - Content-Type: 服务端所返回的数据体的内容类型, 如:"Content-Type: text/html; charset=utf-8"  
-    - Set-Cookie: 服务端返回给客户端的cookie数据, 如:" Set-Cookie: ASP.NET_SessionId=icnh2ku2dqlmkciyobgvzl55; path=/"
 
 ## 服务器返回状态码
 - 说明
