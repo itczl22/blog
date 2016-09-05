@@ -4,7 +4,7 @@
 
 ## 本地新建项目提交到远程服务器
 ```
-- 先在github上创建一个仓库命名为"blog"
+先在github上创建一个仓库命名为"blog"
 echo "# Git基础知识及应用" >> README.md
 git init                                                  [初始化仓库]
 git config -local user.email itczliang@gmail.com　        [设置用户邮箱]
