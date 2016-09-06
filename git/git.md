@@ -1,4 +1,4 @@
-# Git基础知识及应用
+# Git基础知识及常用命令
 ## Git结构示意图
  ![Git结构示意图](/git/git.png "Git结构示意图")
 
@@ -41,3 +41,49 @@ staged         [已add]
 ```
 
 ## Git的基本命令
+- 常用的配置命令
+```
+  git config --global --list(-l)                        [全局的, 主目录下的.gitconfig]
+  git config --local  --list(-l)                        [局部的, 当前项目下的.git/config]
+  git config --local user.name  itczl22                 [配置user.email]
+  git config --local user.email itczliang@gmail.com     [配置user.email]
+  git config --local http.sslverify false               [不需要进行安全验证]
+  git config --local credential.helper store|cache      [密码管理, store表示存到本地，cache表示缓存]
+  git config --unset --local remote.origin.url          [删除配置的远程仓库地址]
+  git config --local push.default simple                [simple表示只push当前分支, matching表示push所有分支并合并]
+  git config --get remote.origin.url                    [获取仓库远程地址]
+  global表示全局配置, local表示当前仓库配置. 以上local可以换成global
+```
+ - 分支相关命令
+```
+  git branch                              [查看本地分支]
+  git checkout [-b] branch-name           [切换分支, -b表示创建, 一般都是从master创建]
+  git branch -d|-D  branch-name           [删除分支, -d选项只能删除已经被当前分支所合并过的分支, -D表示强制删除]
+  git branch -a                           [显示远程仓库所有分支]
+  git branch -v                           [显示本地所有分支，及该分支的commit信息]
+  git branch --merged                     [查看哪些分支已被并入当前分支]
+  git branch --no-merged                  [查看哪些分支没有被并入当前分支]
+  git branch -m obranch nbranch           [重命名分支]
+  git push origin remote-branch           [推送到远程分支, 如果远程分支不存在则创建]
+  git push origin --delete remote-branch  [删除远程分支]
+```
+- 常用的基本命令
+```
+  git init           [初始化仓库]
+  git add            [stage文件]
+  git commit         [提交文件]
+  git clone          [从远程克隆项目]
+  git status         [查看项目状态]
+  git rm             [删除, 包括本地和远程]
+  git rm --cached    [删除远程文件, 本地保留]
+  git mv             [移动文件]
+  git log            [查看提交历史]
+  git checkout       [切换分支]
+  git push           [推送到远程]
+  git pull           [从远程更新]                          ~
+```
+- 常用的进阶命令
+```
+asdf
+```
+ 
