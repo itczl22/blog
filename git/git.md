@@ -67,6 +67,27 @@ staged         [已add]
   git push origin remote-branch           [推送到远程分支, 如果远程分支不存在则创建]
   git push origin --delete remote-branch  [删除远程分支]
 ```
+- diff相关命令
+```
+  git diff                      [changed but not yet staged, 之前add后又做修改但还未add)
+  git diff --staged(--cached)   [staged that will go into next commit, 只比较add后的文件的不同]
+  git diff HEAD                 [all differences, 合并上边的两个]
+  git diff master               [compare branches, 和master的不同, 未merge之前的所有修改除了新增加的文件）
+  git diff origin master        [和远程的不同]
+  git diff origin master -- file[比较某个文件的不同]
+  git diff commit1  commit2     [比较两个commit版本的不同]
+```
+- 回滚相关命令
+```
+  git reset --soft              [commit, 回退到某个版本,只回退了commit的信息,不会恢复到index file一>级]
+  git reset --mixed             [commit & index, 默认方式, 只保留源码，回退commit和index信息]
+  git reset --hard              [all source, 彻底回退到某个版本, 此命令慎用! 相当于代码没写, 但是不会回退pull]
+  git reset --hard commit-id    [回滚到某个指定版本]
+  git reset  HEAD test.cpp      [撤销对test.cpp的add, 等价于git reset -- test.cpp]
+  git checkout -- test.cpp      [撤销对test.cpp的修改]
+  git checkout commit-id        [回到某个版本]
+  git revert commit commit-id   [撤销指定的commit]
+```
 - 常用的基本命令
 ```
   git init           [初始化仓库]
@@ -82,8 +103,17 @@ staged         [已add]
   git push           [推送到远程]
   git pull           [从远程更新]                          ~
 ```
-- 常用的进阶命令
+- 其他命令
 ```
-asdf
+  git commit -am "something awesome"  [不用add直接提交，前提不是新文件]
+  git commit --amend                  [重新commit，可以重新修改之前的commit信息]
+  git remote show origin              [显示远程仓库信息]
+  git grep [-n]                       [查找指定内容, -n表示显示行数]
+  git log -2                          [显示最近两次提交信息]
+  git log -p -2                       [-p shows the difference introduced in each commit]
+  git log --reverse                   [倒叙显示]
+  git tag                             [列出当前所有的标签]
+  git tag -a pro-v1.4 -m 'version 1.4'[建立标签1.4]
+  git tag -a v1.5 Zff5CwbQ            [当前分支Zff5CwbQ 作为一个标签1.5]
 ```
  
