@@ -73,7 +73,7 @@ sudo  /home/itczl/software/nginx/sbin/nginx -c /home/itczl/software/nginx/conf/n
 ## Nginx配置
 - [Nginx官方配置示例](https://www.nginx.com/resources/wiki/start/topics/examples/full "Nginx官方配置示例")
 - Nginx配置文件结构  
-![Nginx配置文件结构](/nginx/nginx-config-structure.png, "Nginx配置文件结构")
+![Nginx配置文件结构](/nginx/nginx-config-structure.png "Nginx配置文件结构")
 - main模块
 ```
 user itczl itczl;                   #定义Nginx运行的用户和用户组, default: nobody
