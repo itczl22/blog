@@ -30,32 +30,22 @@
 
 ## Nginx的安装
 - [Nginx官方教程](http://nginx.org/en/linux_packages.html "Nginx官方教程")
-- 下载
 ```
-wget http://nginx.org/download/nginx-1.9.5.tar.gz
-```
-- 解压
-```
-tar zxvf nginx-1.9.5.tar.gz
-```
-- 安装
-```
-cd nginx-1.9.5
-./configure --prefix=/home/itczl/software/nginx --with-http_ssl_module  --enable-fpm --add-module=/home/itczl/software/nginx/module/echo-nginx-module [添加自定义模块]
-make -j2
-make install
-```
-- 启动
-```
-sudo /home/itczl/software/nginx/sbin/nginx -c /home/itczl/software/nginx/conf/nginx.conf
-```
-- 重启
-```
-sudo /home/itczl/software/nginx/sbin/nginx -c /home/itczl/software/nginx/conf/nginx.conf -s reload
-```
-- 停止
-```
-sudo  /home/itczl/software/nginx/sbin/nginx -c /home/itczl/software/nginx/conf/nginx.conf -s stop
+  下载
+    wget http://nginx.org/download/nginx-1.9.5.tar.gz
+  解压
+    tar zxvf nginx-1.9.5.tar.gz
+  安装
+    cd nginx-1.9.5
+    ./configure --prefix=/home/itczl/software/nginx --with-http_ssl_module  --enable-fpm --add-module=/home/itczl/software/nginx/module/echo-nginx-module [添加自定义模块]
+    make -j2
+    make install
+  启动
+    sudo /home/itczl/software/nginx/sbin/nginx -c /home/itczl/software/nginx/conf/nginx.conf
+  重启
+    sudo /home/itczl/software/nginx/sbin/nginx -c /home/itczl/software/nginx/conf/nginx.conf -s reload
+  停止
+    sudo  /home/itczl/software/nginx/sbin/nginx -c /home/itczl/software/nginx/conf/nginx.conf -s stop
 ```
 - 增加对某个某块的支持
 ```
@@ -201,54 +191,54 @@ server {
         ```
     - location示例
     ```
-    #匹配到就依次访问后边的资源, 直到访问成功
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
+        #匹配到就依次访问后边的资源, 直到访问成功
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
     ```
     ```
-    #拒绝访问.git目录
-    location ~* /\.git/ {
-        deny all;
-    }
+        #拒绝访问.git目录
+        location ~* /\.git/ {
+            deny all;
+        }
     ```
     ```
-    #php文件由fastcgi处理
-    location ~ \.php($|/) {
-        fastcgi_pass  127.0.0.1:9000;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME  $document_root/$fastcgi_script_name;
-        fastcgi_param  PATH_INFO   $fastcgi_path_info;
-        include        fastcgi_params;
-    }
+        #php文件由fastcgi处理
+        location ~ \.php($|/) {
+            fastcgi_pass  127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root/$fastcgi_script_name;
+            fastcgi_param  PATH_INFO   $fastcgi_path_info;
+            include        fastcgi_params;
+        }
     ```
     ```
-    #对uri为itczl的请求代理到上边定义的upstream itczl.proxy
-    location ~ ^/itczl/(.+)$ {
-        proxy_pass http://itczl.proxy/$1?$args;
-        #proxy_pass http://10.172.86.152:8888/$1?$args;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_connect_timeout 20ms;
-        proxy_send_timeout 20ms;
-        proxy_read_timeout 200ms;
-        proxy_http_version 1.1;
-    }
+        #对uri为itczl的请求代理到上边定义的upstream itczl.proxy
+        location ~ ^/itczl/(.+)$ {
+            proxy_pass http://itczl.proxy/$1?$args;
+            #proxy_pass http://10.172.86.152:8888/$1?$args;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_connect_timeout 20ms;
+            proxy_send_timeout 20ms;
+            proxy_read_timeout 200ms;
+            proxy_http_version 1.1;
+        }
     ```
     ```
-    #location中的root会覆盖server中的root
-    location ~ ^/uvewiki/(.*)\.php {
-        root /home/itczl/work/test;
-        fastcgi_pass  127.0.0.1:9000;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-        include        fastcgi_params;
+        #location中的root会覆盖server中的root
+        location ~ ^/uvewiki/(.*)\.php {
+            root /home/itczl/work/test;
+            fastcgi_pass  127.0.0.1:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
 
-        allow 10.0.0.0/8;
-        allow 172.0.0.0/8;
-        deny all;
-    }
+            allow 10.0.0.0/8;
+            allow 172.0.0.0/8;
+            deny all;
+        }
     ```
 ## Nginx的全局变量
 ```
