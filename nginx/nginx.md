@@ -128,7 +128,31 @@ http {
 ```
 - server模块
 ```
+server {
+    listen       80;                         #listen port
+    server_name  itczl.com www.itczl.com;    #server name
+    root /home/itczl/work/web;               #root目录
+    index  index.php index.html;             #默认访问文件, 依次查找
+    access_log  logs/itczl.com.log  main;    #access日志
+
+    allow 10.0.0.0/8;                        #允许10开头的内网访问
+    deny all;                                #除了allow指定的外, 其他无法访问
+
+    #访问网站需要用户名和密码, 也可以放在location中, 一般是内部网站使用
+    #auth_basic           "itczl.com";                      #域的名字, 可自定义
+    #auth_basic_user_file /home/itczl/work/web/itczl.passwd;#用户名密码存放路径
+    #用户名和密码的生成指令
+    #sh -c "echo -n 'itczl:' >> /home/itczl/work/web/itczl.passwd"
+    #sh -c "openssl passwd itczl >> /home/itczl/work/web/itczl.passwd"
+
+    set $test 'test';                        #定义变量test
+}
 ```
 - location模块
-```
-```
+    - location的匹配规则
+    ```
+    ```
+    - location示例
+    ```
+    ```
+
