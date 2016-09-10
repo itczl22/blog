@@ -17,10 +17,13 @@ Nginx是一个网页服务器, 它能反向代理HTTP, HTTPS, SMTP, POP3, IMAP�
     - PHP-FPM以守护进程在后台运行, Nginx响应请求后, 自行处理静态请求, PHP请求则经过fastcgi_pass交由PHP-FPM处理, 处理完毕后返回.
     - Nginx和PHP-FPM的组合, 是一种稳定、高效的PHP运行方式, 效率要比传统的Apache和mod_php高出不少.
 
-## Nginx的内部架构
+## Nginx的内部结构
 - Nginx执行流程
     - nginx在启动后, 在unix系统中会以daemon的方式在后台运行, 后台进程包含一个master进程和多个worker进程. 
     - master进程主要用来管理worker进程, 包含: 接收来自外界的信号, 向各worker进程发送信号, 监控worker进程的运行状态, 当worker进程退出后(异常情况下), 会自动重新启动新的worker进程. 
-    - worker进程主要处理基本的网络事件, 多个worker进程之间是对等的, 他们同等竞争来自客户端的请求, 各进程互相之间是独立的. 一个请求, 只可能在一个worker进程中处理, 一个worker进程, 不可能处理其它进程的请求. worker进程的个数是可以设置的, 一般我们会设置与机器cpu核数一致, 这里面的原因与nginx的进程模型以及事件处理模型是分不开的.
-    - nginx的进程模型
-    ![nginx的进程模型](/nginx/nginx-process-model.png "nginx的进程模型")
+    - worker进程主要处理基本的网络事件, 多个worker进程之间是对等的, 他们同等竞争来自客户端的请求, 各进程互相之间是独立的. 一个请求, 只可能在一个worker进程中处理, 一个worker进程, 不可能处理其它进程的请求, 为了保证这一点在注册事件时必须. worker进程的个数是可以设置的, 一般我们会设置与机器cpu核数一致, 这里面的原因与nginx的进程模型以及事件处理模型是分不开的.
+- Nginx的进程模型    
+  ![Nginx的进程模型](/nginx/nginx-process-model.png "nginx的进程模型")
+- http请求的处理流程  
+  ![http请求的处理流程](/nginx/nginx-http.png "http请求的处理流程")
+
