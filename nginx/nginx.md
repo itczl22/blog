@@ -135,8 +135,23 @@ server {
     index  index.php index.html;             #默认访问文件, 依次查找
     access_log  logs/itczl.com.log  main;    #access日志
 
-    allow 10.0.0.0/8;                        #允许10开头的内网访问
-    deny all;                                #除了allow指定的外, 其他无法访问
+    #upstream配置
+    upstream itczl.proxy {
+        server 10.172.86.152:8088 weight=5;
+        server 10.172.86.153:8088 weight=4;
+        server 10.172.86.154:8088 weight=3;
+        keepalive 10;
+    }
+
+    #如果访问的文件不存在就重定位到location /, 也可用在location中
+    if (!-e $request_filename) {   
+        rewrite ^/(.*)$ / last;
+    }
+
+    #允许访问的ip, 也可以用在location中, 一般是内部网站使用
+    #allow 10.0.0.0/8;                        #允许A类内网访问
+    #allow 192.168.0.0/16;                    #允许C类内网访问
+    #deny all;                                #除了allow指定的外, 其他无法访问
 
     #访问网站需要用户名和密码, 也可以放在location中, 一般是内部网站使用
     #auth_basic           "itczl.com";                      #域的名字, 可自定义
@@ -149,10 +164,110 @@ server {
 }
 ```
 - location模块
-    - location的匹配规则
-    ```
-    ```
+    - location的匹配符
+        - 等于匹配符=: 精确匹配且不支持正则表达式
+        - 空匹配符: 匹配以指定模式开始的 URI 不支持正则表达式
+        - 正则匹配符~: ~是指区分大小写的正则匹配, ~*表示不区分大小写的正则匹配, ^~表示以指定模式开始的正则匹配。
+    - location匹配符的优先级
+        - 等于匹配符, =
+        ```
+        location = /itczl{
+            return 200;
+        }
+        ```
+        - 空匹配符, 满足精确匹配时
+        ```
+        location  /itczl/itczl.php {
+            return 200;
+        }
+        ```
+        - 空匹配符, 满足以指定模式开始时的匹配时
+        ```
+        location /itczl {
+            return 200;
+        }
+        ```
+        - 正则匹配符, 以指定模式开始的正则匹配 ^~
+        ```
+        location ^~ /itczl/ {
+            return 200;
+        }
+        ```
+        - 正则匹配符, ~或~*
+        ```
+        location ~* \.php$ {
+            return 200;
+        }
+        ```
     - location示例
     ```
+    #匹配到就依次访问后边的资源, 直到访问成功
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
     ```
+    ```
+    #拒绝访问.git目录
+    location ~* /\.git/ {
+        deny all;
+    }
+    ```
+    ```
+    #php文件由fastcgi处理
+    location ~ \.php($|/) {
+        fastcgi_pass  127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root/$fastcgi_script_name;
+        fastcgi_param  PATH_INFO   $fastcgi_path_info;
+        include        fastcgi_params;
+    }
+    ```
+    ```
+    #对uri为itczl的请求代理到上边定义的upstream itczl.proxy
+    location ~ ^/itczl/(.+)$ {
+        proxy_pass http://itczl.proxy/$1?$args;
+        #proxy_pass http://10.172.86.152:8888/$1?$args;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 20ms;
+        proxy_send_timeout 20ms;
+        proxy_read_timeout 200ms;
+        proxy_http_version 1.1;
+    }
+    ```
+    ```
+    #location中的root会覆盖server中的root
+    location ~ ^/uvewiki/(.*)\.php {
+        root /home/itczl/work/test;
+        fastcgi_pass  127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
 
+        allow 10.0.0.0/8;
+        allow 172.0.0.0/8;
+        deny all;
+    }
+    ```
+## Nginx的全局变量
+```
+    #curl -H 'Host: test.itczl.com' 'http://10.172.86.152:8885/param/a.jpg?a=1&b=4'
+    $document_root;            #/home/itczl/work/web
+    $host;                     #test.itczl.com
+    $args;                     #a=1&b=4
+    $document_uri;             #/param/a.jpg
+    $uri;                      #/param/a.jpg
+    $server_addr;              #10.172.86.152
+    $server_name;              #test.itczl.com
+    $server_port;              #8885
+    $remote_addr;              #10.172.86.152  用户ip
+    $remote_port;              #34746
+    $request_method;           #GET
+    $server_protocol;          #HTTP/1.1
+    $scheme;                   #http
+    $query_string;             #a=1&b=4
+    $request_uri;              #/param/a.jpg?a=1&b=4
+    $request_filename;         #/home/itczl/work/web/param/a.jpg
+    $http_user_agent;          #curl/7.19.0 (x86_64-unknown-linux-gnu) libcurl/7.19.0 OpenSSL/0.9.8b zlib/1.2.3 libidn/0.6.5
+```
