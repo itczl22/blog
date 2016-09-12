@@ -24,9 +24,9 @@
     - master进程主要用来管理worker进程, 包含: 接收来自外界的信号, 向各worker进程发送信号, 监控worker进程的运行状态, 当worker进程退出后(异常情况下), 会自动重新启动新的worker进程. 
     - worker进程主要处理基本的网络事件, 多个worker进程之间是对等的, 他们同等竞争来自客户端的请求, 各进程互相之间是独立的. 一个请求, 只可能在一个worker进程中处理, 一个worker进程, 不可能处理其它进程的请求, 为了保证这一点在注册事件时必须. worker进程的个数是可以设置的, 一般我们会设置与机器cpu核数一致, 这里面的原因与nginx的进程模型以及事件处理模型是分不开的.
 - Nginx的进程模型    
-  ![Nginx的进程模型](/nginx/nginx-process-model.png "nginx的进程模型")
+  ![Nginx的进程模型](./nginx/nginx-process-model.png "nginx的进程模型")
 - http请求的处理流程  
-  ![http请求的处理流程](/nginx/nginx-http.png "http请求的处理流程")
+  ![http请求的处理流程](./nginx/nginx-http.png "http请求的处理流程")
 
 ## Nginx的安装
 - [Nginx官方教程](http://nginx.org/en/linux_packages.html "Nginx官方教程")
@@ -63,7 +63,7 @@
 ## Nginx配置
 - [Nginx官方配置示例](https://www.nginx.com/resources/wiki/start/topics/examples/full "Nginx官方配置示例")
 - Nginx配置文件结构  
-![Nginx配置文件结构](/nginx/nginx-config-structure.png "Nginx配置文件结构")
+![Nginx配置文件结构](./nginx/nginx-config-structure.png "Nginx配置文件结构")
 - main模块
 ```
 user itczl itczl;                   #定义Nginx运行的用户和用户组, default: nobody

@@ -10,13 +10,13 @@
 
 ## 协议结构
 HTTP协议格式也比较简单, 格式如下
-![HTTP协议格式](/http/proto-fmt.png "HTTP协议格式")
+![HTTP协议格式](./http/proto-fmt.png "HTTP协议格式")
 
 ## HTTP协议举例
 - 下面是一个HTTP请求及响应的例子
-![HTTP协议示例](/http/proto-example.png "HTTP协议示例")
+![HTTP协议示例](./http/proto-example.png "HTTP协议示例")
 - 下面是浏览器中显示的格式  
-![HTTP协议在浏览器中的显示格式](/http/proto-demo.png "HTTP协议在浏览器中的显示格式")
+![HTTP协议在浏览器中的显示格式](./http/proto-demo.png "HTTP协议在浏览器中的显示格式")
 
 ## 请求头格式
 - 请求行
