@@ -191,7 +191,6 @@ server {
         ```
     - location示例
     ```
-<<<<<<< HEAD
         #匹配到就依次访问后边的资源, 直到访问成功
         location / {
             try_files $uri $uri/ /index.php?$query_string;
@@ -212,30 +211,8 @@ server {
             fastcgi_param  PATH_INFO   $fastcgi_path_info;
             include        fastcgi_params;
         }
-=======
-    #匹配到就依次访问后边的资源, 直到访问成功
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
     ```
     ```
-    #拒绝访问.git目录
-    location ~* /\.git/ {
-        deny all;
-    }
-    ```
->>>>>>> 68db17a... nginx config
-    ```
-    #php文件由fastcgi处理
-    location ~ \.php($|/) {
-        fastcgi_pass  127.0.0.1:9000;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME  $document_root/$fastcgi_script_name;
-        fastcgi_param  PATH_INFO   $fastcgi_path_info;
-        include        fastcgi_params;
-    }
-    ```
-<<<<<<< HEAD
         #对uri为itczl的请求代理到上边定义的upstream itczl.proxy
         location ~ ^/itczl/(.+)$ {
             proxy_pass http://itczl.proxy/$1?$args;
@@ -262,36 +239,8 @@ server {
             allow 172.0.0.0/8;
             deny all;
         }
-=======
     ```
-    #对uri为itczl的请求代理到上边定义的upstream itczl.proxy
-    location ~ ^/itczl/(.+)$ {
-        proxy_pass http://itczl.proxy/$1?$args;
-        #proxy_pass http://10.172.86.152:8888/$1?$args;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_connect_timeout 20ms;
-        proxy_send_timeout 20ms;
-        proxy_read_timeout 200ms;
-        proxy_http_version 1.1;
-    }
-    ```
-    ```
-    #location中的root会覆盖server中的root
-    location ~ ^/uvewiki/(.*)\.php {
-        root /home/itczl/work/test;
-        fastcgi_pass  127.0.0.1:9000;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-        include        fastcgi_params;
 
-        allow 10.0.0.0/8;
-        allow 172.0.0.0/8;
-        deny all;
-    }
->>>>>>> 68db17a... nginx config
-    ```
 ## Nginx的全局变量
 ```
     #curl -H 'Host: test.itczl.com' 'http://10.172.86.152:8885/param/a.jpg?a=1&b=4'
