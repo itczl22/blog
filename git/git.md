@@ -1,6 +1,6 @@
 # Git基础知识及常用命令
 ## Git结构示意图
- ![Git结构示意图](/git/git.png "Git结构示意图")
+ ![Git结构示意图](./git.png "Git结构示意图")
 
 ## 本地新建项目提交到远程服务器
 ```
@@ -19,7 +19,7 @@ git push origin dev_branch                                [自动在远程创建
 ```
 对于以上配置也可以直接修改配置文件project-path/.git/config
 - 配置文件示例  
-![Git配置文件示例](/git/config.png "Git配置文件示例")
+![Git配置文件示例](./config.png "Git配置文件示例")
 
 ## Git中的文件状态
 ```
