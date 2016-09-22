@@ -22,7 +22,7 @@
 - Nginx执行流程
     - nginx在启动后, 在unix系统中会以daemon的方式在后台运行, 后台进程包含一个master进程和多个worker进程. 
     - master进程主要用来管理worker进程, 包含: 接收来自外界的信号, 向各worker进程发送信号, 监控worker进程的运行状态, 当worker进程退出后(异常情况下), 会自动重新启动新的worker进程. 
-    - worker进程主要处理基本的网络事件, 多个worker进程之间是对等的, 他们同等竞争来自客户端的请求, 各进程互相之间是独立的. 一个请求, 只可能在一个worker进程中处理, 一个worker进程, 不可能处理其它进程的请求, 为了保证这一点在注册事件时必须. worker进程的个数是可以设置的, 一般我们会设置与机器cpu核数一致, 这里面的原因与nginx的进程模型以及事件处理模型是分不开的.
+    - worker进程主要处理基本的网络事件, 多个worker进程之间是对等的, 他们同等竞争来自客户端的请求, 各进程互相之间是独立的. 一个请求, 只可能在一个worker进程中处理, 一个worker进程, 不可能处理其它进程的请求, 为了保证这一点在注册事件时必须互斥. worker进程的个数是可以设置的, 一般我们会设置与机器cpu核数一致, 这里面的原因与nginx的进程模型以及事件处理模型是分不开的.
 - Nginx的进程模型    
   ![Nginx的进程模型](/nginx/nginx-process-model.png "nginx的进程模型")
 - http请求的处理流程  
@@ -82,18 +82,18 @@ http {
     include mime.types;                     #文件扩展名与文件类型映射表
     default_type application/octet-stream;  #默认文件类型
     server_names_hash_bucket_size 128;      #服务器名字的hash表大小
-    client_header_buffer_size 32k;          #上传文件大小限制
-    large_client_header_buffers 4 32k;      #设定请求缓
-    client_max_body_size 80m;               #设定请求缓
+    client_header_buffer_size 32k;          #请求头缓存大小
+    large_client_header_buffers 4 32k;      #请求头缓存大小
+    client_max_body_size 80m;               #请求体缓存大小
     sendfile on;                            #开启高效文件传输模式, sendfile指令指定nginx是否调用sendfile函数来输出文件, 对于普通应用设为 on, 如果用来进行下载等应用磁盘IO重负载应用, 可设置为off, 以平衡磁盘与网络I/O处理速度, 降低系统的负载. 注意：如果图片显示不正常把这个改成off. 
-    autoindex off;                          #开启目录列表访问, 合适下载服务器, 默认关闭. 
+    autoindex on;                           #开启目录列表访问, 合适下载服务器, 默认关闭. 
     tcp_nopush on;                          #防止网络阻塞
     tcp_nodelay on;                         #防止网络阻塞
     keepalive_timeout 60;                   #长连接超时时间, 单位是秒
 
     #fastcgi相关参数是为了改善网站的性能, 减少资源占用, 提高访问速度
     fastcgi_connect_timeout 300;            #指定连接到后端FastCGI的超时时间
-    fastcgi_send_timeout 300;               #指定向FastCGI传送请求的超时时间
+    fastcgi_send_timeout 100;               #指定向FastCGI传送请求的超时时间
     fastcgi_read_timeout 300;               #指定接收FastCGI应答的超时时间
     fastcgi_buffer_size 64k;                #用于指定读取FastCGI应答第一部分(应答头)需要用多大的缓冲区
     fastcgi_buffers 4 64k;                  #指定本地需要用多少和多大的缓冲区来缓冲FastCGI的应答请求. 如果一个PHP脚本所产生的页面大小为256KB, 那么会为其分配4个64KB的缓冲区来缓存；如果页面大小大于256KB, 那么大于256KB的部分会缓存到fastcgi_temp指定的路径中, 但是这并不是好方法, 因为内存中的数据处理速度要快于硬盘. 一般这个值应该为站点中PHP脚本所产生的页面大小的中间值, 如果站点大部分脚本所产生的页面大小为256KB, 那么可以把这个值设置为“16 16k”、“4 64k”等. 
