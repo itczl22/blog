@@ -1,3 +1,4 @@
+http://www.ruanyifeng.com/blog/2016/08/http.html
 # HTTP协议
 ## 简介
 - 超文本传输协议（Hypertext Transfer Protocol, 简称HTTP）是应用层协议, 自 1990 年起, HTTP 就已经被应用于 WWW 全球信息服务系统
@@ -21,7 +22,7 @@ HTTP协议格式也比较简单, 格式如下
 ## 请求头格式
 - 请求行
     - 请求方法  请求资源  协议版本 CRLF
-    - 示例: HTTP/1.1  200  OK
+    - 示例: Get /test.php HTTP/1.1
 - 通用头(general-header)
     - Connection: 客户端是否希望与服务端之间保持长连接, 如"Connection: close","Connection: keep-alive"
     - Date: 时间, 只有当请求方法为POST或PUT方法时客户端才可能会有些字段
