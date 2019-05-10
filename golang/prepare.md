@@ -61,7 +61,7 @@ go语言程序， 不具备命令源码文件的那两个特征的源码文件�
 ```
 
 * 图示  
-[源码文件类型](./source_file_type.png)
+![源码文件类型](./source_file_type.png)
 
 go语言命令  
 
