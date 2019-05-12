@@ -75,7 +75,6 @@ go run src/test/hello.go 直接运行，并不生成./bin/test文件，一般用
 go build是以GOPATH为相对路径的，所以在哪个目录下都可以执行的  
 执行该命令并以代码包的导入路径为参数时，该代码包及其依赖会被编译，和 -a 参数一样  
 如果你的源代码针对不同的操作系统需要不同的处理，那么你可以根据不同的操作系统后缀来命名文件, 例如有一个读取数组的程序，它对于不同的操作系统可能有如下几个源文件：`array_linux.go array_darwin.go array_windows.go array_freebsd.go`, go build的时候会选择性地编译以系统名结尾的文件, 例如Linux系统下面编译只会选择array_linux.go文件，其它系统命名后缀文件全部忽略  
-
 参考：https://github.com/hyper0x/go_command_tutorial/blob/master/0.1.md  
 
 * go install  
