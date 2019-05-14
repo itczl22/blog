@@ -18,18 +18,18 @@
  2. The i-th byte of a string is not necessarily the i-th character of a string. because of utf-8.
 
  3. no new memory allocated in both either case
-   * Immutability means that it is safe for two copies of a string to share the same underlying memory.
-   * A string s and a substring like s[7:] may safely share the same data.
+    * Immutability means that it is safe for two copies of a string to share the same underlying memory.
+    * A string s and a substring like s[7:] may safely share the same data.
 
  4. unicode  
-   * assigns each one a standard number called a unicode code point or a rune in go terminology.
-   * the natural data type to hold a single rune is int32, and that\`s what go uses and it has the synonym rune for precisely this purpose.
-   * unicode每个字符都是int32，但是太浪费空间了，所以就有了utf-8.
+    * assigns each one a standard number called a unicode code point or a rune in go terminology.
+    * the natural data type to hold a single rune is int32, and that\`s what go uses and it has the synonym rune for precisely this purpose.
+    * unicode每个字符都是int32，但是太浪费空间了，所以就有了utf-8.
 
  5. utf-8 :  
-   * utf-8 is a variable-length encoding of unicode code point as bytes. it uses between 1 and 4 bytes to represent each rune, but only 1 byte for ASCII characters and only 2 or 3 bytes for most rune in common use. The high-order bits of the first byte of the encoding for a rune indicate how many bytes follow.  
-   * Go source file are always encode in UTF-8.  
-   * Unicode escapes : \uhhhh for 16-bit value, \Uhhhhhhhh for a 32-bit value(less use)  
+    * utf-8 is a variable-length encoding of unicode code point as bytes. it uses between 1 and 4 bytes to represent each rune, but only 1 byte for ASCII characters and only 2 or 3 bytes for most rune in common use. The high-order bits of the first byte of the encoding for a rune indicate how many bytes follow.  
+    * Go source file are always encode in UTF-8.  
+    * Unicode escapes : \uhhhh for 16-bit value, \Uhhhhhhhh for a 32-bit value(less use)  
      A rune whose value is less than 256 may be written with a single hexadecimal escape,such as ‘\x41’ for ‘A' but for higher values a \u or \U must be used.  
      ‘\xe4\xb8\x96’ is not a legal rune literal though these three bytes are a valid UTF-8 encoding of a single code point
 
@@ -58,15 +58,18 @@
 #### 类型
 * 类型声明   
  1. type name underlying-type: type Celsius float64
+ 
  2. 一种新的类型，即使是和underlying-type也不能作比较和运算(必须显示转换)
+ 
  3. underlying-type 支持的运算新类型也支持哦，包括输出时的%T也可以匹配
+ 
  4. 一般用来重命名一些比较复杂的数据类型，这样书写比较方便
 
 * 內建的类型别名  
 在Go 1.9中, 内部其实使用了类型别名的特性. 比如内建的byte类型，其实是uint8的类型别名，而rune其实是int32的类型别名  
 ```
-type byte = uint8
-type rune = int32
+  type byte = uint8
+  type rune = int32
 ```
 
 * 类型别名主要作用  
@@ -78,8 +81,8 @@ type rune = int32
 * 类型别名和类型定义的区别  
 我们基于一个类型创建一个新类型，称之为defintion；基于一个类型创建一个别名，称之为alias，这就是他们最大的区别。
 ```
-type MyInt1 int    // 类型定义
-type MyInt2 = int  // 类型别名
+  type MyInt1 int    // 类型定义
+  type MyInt2 = int  // 类型别名
 ```
 
 ####  类型转换
@@ -96,7 +99,7 @@ type MyInt2 = int  // 类型别名
  * 虽然直接把一个整数值转换为一个string类型的值是可行的, 但被转换的整数值应该可以代表一个有效的 Unicode 代码点, 否则转换的结果将会是"?"（仅由高亮的问号组成的字符串值). 字符'?'的 Unicode 代码点是U+FFFD. 它是 Unicode 标准中定义的 Replacement Character, 专用于替换那些未知的、不被认可的以及无法展示的字符, 如`string(-1)`
 
  * 关于string类型与各种切片类型之间的互转
-
+ 
    1. 一个值在从string类型向[]byte类型转换时代表着以 UTF-8 编码的字符串会被拆分成零散、独立的字节. 除了与 ASCII 编码兼容的那部分字符集外, 以 UTF-8 编码的某个单一字节是无法代表一个字符的.  
    `string([]byte{'\xe4', '\xbd', '\xa0', '\xe5', '\xa5', '\xbd'}) // 你好`.  
    比如, UTF-8 编码的三个字节 \xe4、\xbd和\xa0 合在一起才能代表字符'你', 而 \xe5、\xa5和\xbd 合在一起才能代表字符'好'.
@@ -113,12 +116,11 @@ type MyInt2 = int  // 类型别名
 
 * 类型断言的两种方法  
 ```
-value, ok := interface{}(container).([]string)
+  value, ok := interface{}(container).([]string)
 ```
 ```
-func getType(containerI interface{}) (elem string, err error) {
+  func getType(containerI interface{}) (elem string, err error) {
 	switch t := containerI.(type) { // element.(type)语法不能在switch外的任何逻辑里面使用，如果你要在switch外面判断一个类型就使用第一种方式i.(T)
-
 	case []string:
 		elem = t[1]
 	case map[int]string:
@@ -127,22 +129,22 @@ func getType(containerI interface{}) (elem string, err error) {
 		err = fmt.Errorf("unsupported container type: %T", containerI)
 	}
 	return
-}
+  }
 ```
 
 #### 变量
 * 变量的声明
 ```
-var name type = expression // type 和 = expression可以省略, 但是不能同时省略
-name := "test"             // 短变量声明, 只用于局部变量的声明
+  var name type = expression // type 和 = expression可以省略, 但是不能同时省略
+  name := "test"             // 短变量声明, 只用于局部变量的声明
 ```
 := is a type of short variable declaration , declares one or more variables and gives them appropriate types based on the initializer values. := is used only within a function, not for package-level variables.
 
 * 变量重声明  
 只针对短变量声明
 ```
-var err error
-n, err := io.WriteString(os.Stdout, "Hello, World!\n") // 这里对`err`进行了重声明
+  var err error
+  n, err := io.WriteString(os.Stdout, "Hello, World!\n") // 这里对`err`进行了重声明
 ```
 
 * 变量赋值  
@@ -194,23 +196,23 @@ x, y = y, x；先评估右侧的值，再赋值给左侧
 #### 预声明的name
 * constants  
 ```
-true false iota nil
+  true false iota nil
 ```
 
 * types
 ```
-int int8 int16 int32 int64
-uint uint8 uint16 uint32 uint64 uintptr float32 float64
-bool byte rune string error
-complex128 complex64
-go只有显式类型转换，int32转int64也必须显式转换
+  int int8 int16 int32 int64
+  uint uint8 uint16 uint32 uint64 uintptr float32 float64
+  bool byte rune string error
+  complex128 complex64
+  go只有显式类型转换，int32转int64也必须显式转换
 ```
 
 * functions
 ```
-make len cap new append copy close delete
-complex real imag panic recover
-These names are not reserved, so you may use them in declarations，为了避免混淆一般不覆盖
+  make len cap new append copy close delete
+  complex real imag panic recover
+  These names are not reserved, so you may use them in declarations，为了避免混淆一般不覆盖
 ```
 
 #### 小片段
