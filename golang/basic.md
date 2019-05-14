@@ -137,8 +137,10 @@
 ```
   var name type = expression // type 和 = expression可以省略, 但是不能同时省略
   name := "test"             // 短变量声明, 只用于局部变量的声明
+
+  := is a type of short variable declaration , declares one or more variables and gives them appropriate types based on the initializer   values.
+  := is used only within a function, not for package-level variables.
 ```
-:= is a type of short variable declaration , declares one or more variables and gives them appropriate types based on the initializer values. := is used only within a function, not for package-level variables.
 
 * 变量重声明  
 只针对短变量声明
@@ -190,8 +192,13 @@ x, y = y, x；先评估右侧的值，再赋值给左侧
 ```
 
 #### go的25个关键字
-  break、default、func、interface、select、case、defer、go、map、struct、chan、else、goto、package、switch、const、fallthrough、if、range、type、continue、for、import、return、var  
+```
+  break、default、func、interface、select、case、defer、go
+  map、struct、chan、else、goto、package、switch、const、var
+  if、range、type、continue、for、import、return、fallthrough
+  
   不能被用作name，其他的都可以被覆盖，比如内建函数、iota、true、nil、int、make等
+```
 
 #### 预声明的name
 * constants  
