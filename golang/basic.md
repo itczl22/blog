@@ -58,11 +58,11 @@
 #### 类型
 * 类型声明   
  1. type name underlying-type: type Celsius float64
- 
+
  2. 一种新的类型，即使是和underlying-type也不能作比较和运算(必须显示转换)
- 
+
  3. underlying-type 支持的运算新类型也支持哦，包括输出时的%T也可以匹配
- 
+
  4. 一般用来重命名一些比较复杂的数据类型，这样书写比较方便
 
 * 內建的类型别名  
@@ -99,7 +99,7 @@
  * 虽然直接把一个整数值转换为一个string类型的值是可行的, 但被转换的整数值应该可以代表一个有效的 Unicode 代码点, 否则转换的结果将会是"?"（仅由高亮的问号组成的字符串值). 字符'?'的 Unicode 代码点是U+FFFD. 它是 Unicode 标准中定义的 Replacement Character, 专用于替换那些未知的、不被认可的以及无法展示的字符, 如`string(-1)`
 
  * 关于string类型与各种切片类型之间的互转
- 
+
    1. 一个值在从string类型向[]byte类型转换时代表着以 UTF-8 编码的字符串会被拆分成零散、独立的字节. 除了与 ASCII 编码兼容的那部分字符集外, 以 UTF-8 编码的某个单一字节是无法代表一个字符的.  
    `string([]byte{'\xe4', '\xbd', '\xa0', '\xe5', '\xa5', '\xbd'}) // 你好`.  
    比如, UTF-8 编码的三个字节 \xe4、\xbd和\xa0 合在一起才能代表字符'你', 而 \xe5、\xa5和\xbd 合在一起才能代表字符'好'.
@@ -196,7 +196,7 @@ x, y = y, x；先评估右侧的值，再赋值给左侧
   break、default、func、interface、select、case、defer、go
   map、struct、chan、else、goto、package、switch、const、var
   if、range、type、continue、for、import、return、fallthrough
-  
+
   不能被用作name，其他的都可以被覆盖，比如内建函数、iota、true、nil、int、make等
 ```
 
