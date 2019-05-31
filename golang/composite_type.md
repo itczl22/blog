@@ -96,18 +96,13 @@
 ```
 
 #### struct
+
 * def
 ```
   type Vertex struct {
       X int
       Y int
   }
-```
-
-* pointer to struct
-```
-  p := &v
-  p.X = 110                         //不是(*p).x = 110 just for simple
 ```
 
 * struct array
@@ -123,6 +118,12 @@
     {11, false},
     {13, true},
   }
+```
+
+* pointer to struct
+```
+  p := &v
+  p.X = 110                         //不是(*p).x = 110 just for simple，当然这种写法也是对的
 ```
 
 * struct literals
@@ -144,7 +145,7 @@
 
 * For efficiency, larger struct types are usually passed to or returned from function indirectly using a pointer.                
 
-* If all fields of a struct is comparable, the struct itself is comparable. == or !=, 这样两个一样的结构体，进行相互赋值
+* If all fields of a struct is comparable, the struct itself is comparable. == or != 
 
 * struct embedding and anonymous fields  
 Go let us declare a field with a type but no name, such field named anonymous fields. Example：
@@ -154,22 +155,31 @@ Go let us declare a field with a type but no name, such field named anonymous fi
     Radius  int
   }
 ```
-var c Circle
-  * 此时如果要访问Point的x直接用c.X就可以等价于c.Point.X，即可以省略中间匿名的field name  
-  * 但是literal不可以省略，即: c = Circle{1, 2, 3}是错的!! 必须是c = Circle{Point{1, 2}, 3} 或者 c = Circle{Point: Point{X:1, Y:2,}, Radius: 3}。注意：所有的逗号都是必须的
-
- we cannot use two anonymous fields of the same type since their name would conflict.
+ 1. var c Circle
+    * 此时如果要访问Point的x直接用c.X就可以等价于c.Point.X，即可以省略中间匿名的field name  
+    
+    * 但是literal不可以省略，即: c = Circle{1, 2, 3}是错的!! 必须是c = Circle{Point{1, 2}, 3} 或者 c = Circle{Point: Point{X:1, Y:2,}, Radius: 3}。注意：所有的逗号都是必须的  
+ 
+ 2. we cannot use two anonymous fields of the same type since their name would conflict.
     ```
     type Writer {
       io.Writer
       http.ResponseWriter
     }
     ```
-  * io.Writer这个接口已经有 Write方法了，http.ResponseWriter 同样有 Write方法。那么对 g.Write写的时候，到底调用哪个呢？程序也不知道，编译就出错, 不过你可以重写g.Write方法指定调用哪一个
-
-注意：Point是大写的可以在声明包之外使用，即使是point小写的也可以，但是不使用匿名field就不可以访问！！
-以上方法不仅对字段管用，对method也管用，这也是go面向对象编程的核心点
-
+    * io.Writer这个接口已经有 Write方法了，http.ResponseWriter 同样有 Write方法。那么对 g.Write写的时候，到底调用哪个呢？程序也不知道，编译就出错, 不过你可以重写g.Write方法指定调用哪一个
+  
+ 3. 屏蔽和释放
+    * 只要名称相同，无论这两个方法的签名是否一致，被嵌入类型的方法都会“屏蔽”掉嵌入字段的同名方法. 即使在两个同名的成员一个是字段, 另一个是方法的情况下, 这种"屏蔽"现象依然会存在
+  
+    * 不过即使被屏蔽了，我们仍然可以通过链式的选择表达式(a.b.c)，选择到嵌入字段的字段或方法
+  
+    * 我们可以通过类型变量的名称后跟"." 再后跟嵌入字段类型的方式引用到该字段. 也就是说嵌入字段的类型既是类型也是名称
+  
+    * 嵌入字段的方法集合会被无条件地合并进被嵌入类型的方法集合中
+  
+    * 如果处于同一个层级的多个嵌入字段拥有同名的字段或方法, 那么从被嵌入类型的值那里, 选择此名称的时候就会引发一个编译错误, 因为编译器无法确定被选择的成员到底是哪一个
+  
 #### map
 * def
 ```
@@ -204,7 +214,7 @@ var c Circle
 * mutating maps
 ```
   m[key] = elem
-  elem = m[key]         // 如果key不存在，则返回key对应类型的零值
+  elem = m[key]        // 如果key不存在，则返回key对应类型的零值
   elem, ok := m[key]   // If key is in m, ok is true. If not, ok is false;
                        // If key is not in the map, then elem is the zero value for the map's element type
   delete(m, key)
@@ -212,12 +222,9 @@ var c Circle
 
 * The zero value of a map is nil. A nil map has no keys, nor can keys be added. append只能追加slice, delete只能删除map
 
-* The zero value for a map type is nil, that is, a reference to no hash table at all.
-
 * The make function returns a map of the given type, initialized and ready for use.
 
 * The key type must be comparable using ==
-
 
 * A map is reference to a hash table, nil的map不reference 任何 hash table；nil的slice不reference 任何array
 
@@ -236,3 +243,48 @@ var c Circle
 
 * set of slice  
   先把slice格式化成可比较的类型比如字符串，用其做key
+
+* go里边map的key不支持哪些类型，为什么，key应该如何选择？
+  * Go 语言字典的键类型不可以是函数类型、字典类型和切片类型  
+  * 因为map是通过hash来实现的，Go 语言会用被查找键的哈希值与这些哈希值逐个对比，看看是否有相等的，如果有相等的，那就再用键值本身去对比一次(hash碰撞)  
+  * 如果键类型的值之间无法判断相等，那么此时这个映射的过程就没办法继续下去了  
+  * 最后，只有键的哈希值和键值都相等，才能说明查找到了匹配的键 - 元素对  
+  * map的性能主要取决于 "把键值转换为哈希值" 以及 "把要查找的键值与哈希桶中的键值做对比"，求哈希和判等操作的速度越快，对应的类型就越适合作为键类型  
+  * 以求哈希的操作为例，宽度越小的类型速度通常越快  
+  * 对于布尔类型、整数类型、浮点数类型、复数类型和指针类型来说都是如此  
+  * 对于字符串类型，由于它的宽度是不定的，所以要看它的值的具体长度，长度越短求哈希越快  
+  * 对数组类型的值求哈希实际上是依次求得它的每个元素的哈希值并进行合并，所以速度就取决于它的元素类型以及它的长度  
+  * 对结构体类型的值求哈希实际上就是对它的所有字段值求哈希并进行合并，所以关键在于它的各个字段的类型以及字段的数量  
+  * 对于接口类型，具体的哈希算法，则由值的实际类型决定  
+
+
+#### json
+
+* JSON is an encoding of JavaScript values—strings,numbers,booleans,arrays and objects as unicode text.
+
+* JSON arrays are used to encode Go array or slices
+
+* JSON objects are used to encode Go maps(with string keys) or structs.
+
+* map是json里边的字段name不确定，value是同一类型；struct是json里边的字段name是固定的，value是不同类型. map也可以实现类似struct的效果：map[string]interface{}
+  
+* Marshal : 
+  * Only exported fields are marshaled. 无论是marshal还是unmarshal，go的field必须都是大写的 , 小写的不会解析
+  
+  * field tag: 
+  ```
+  Year   int     `json:"released"`
+  Color bool  `json:"color,omitempty"`
+  ````
+  * the first part of the json  field tag specifies an alternative JSON name (like:total_count) for the Go field(like:TotalCount)  
+  * an additional option,omitempty, which indicates that no JSON output should be produced. If the field has zero value for its type or is otherwise empty. 比如bool类型变量为false时也不输出  
+  * omitempy：有就输出没有(零值)就不输出  
+  * string：可以把数字类型解析为string类型，但是14.50只能输出位14.5  
+  * 短线-：忽略这个字段不解析  
+  
+* Unmarshal:
+  * unmarshal可以选择json的部分字段，其他字段可以ignore.即selective！！！
+  * json里边有的，go里边没有的则忽略
+  * json里边没有的, go里边有的则赋初值零
+  * associates JSON names with Go struct names during unmarshal is case-insensitive 即Number int 不注明 `json:"number"`时会转为number
+  
