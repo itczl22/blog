@@ -42,7 +42,7 @@
 
 * The build-in function make create a slice, in fact, make create an unnamed array variable and return a slice of it.
 
-* s := []int{} 等价于 var s []int  都是空的slice。用后者因为前者已经分配大小，后者如果不使用就不会分配大小的
+* s := []int{} 等价于 var s []int  都是空的slice。用后者因为前者已经分配大小，后者如果不使用就不会分配大小的. 前者 != nil 后者 == nil.
 
 * slice operate
 ```
@@ -145,7 +145,9 @@
 
 * For efficiency, larger struct types are usually passed to or returned from function indirectly using a pointer.                
 
-* If all fields of a struct is comparable, the struct itself is comparable. == or != 
+* If all fields of a struct is comparable, the struct itself is comparable. == or !=, 但必须是同一结构体类型 
+
+* 结构体中成员默认值都是其零值, 因此对于零值为nil类型的成员必须要初始化否则不能使用
 
 * struct embedding and anonymous fields  
 Go let us declare a field with a type but no name, such field named anonymous fields. Example：
