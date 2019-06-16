@@ -1,3 +1,33 @@
+#### 类型
+* 类型声明   
+ 1. type name underlying-type: type Celsius float64
+
+ 2. 一种新的类型，即使是和underlying-type也不能作比较和运算(必须显示转换)
+
+ 3. underlying-type 支持的运算新类型也支持哦，包括输出时的%T也可以匹配
+
+ 4. 一般用来重命名一些比较复杂的数据类型，这样书写比较方便
+
+* 內建的类型别名  
+在Go 1.9中, 内部其实使用了类型别名的特性. 比如内建的byte类型，其实是uint8的类型别名，而rune其实是int32的类型别名  
+```
+  type byte = uint8
+  type rune = int32
+```
+
+* 类型别名主要作用  
+类型别名的设计初衷是为了解决代码重构时，类型在包(package)之间转移时产生的问题  
+比如我们有一个导出的类型flysnow.org/lib/T1，现在要迁移到另外一个package中, 比如flysnow.org/lib2/T1中  
+没有type alias的时候我们这么做，就会导致其他第三方引用旧的package路径的代码，都要统一修改到lib2/T1，不然无法使用  
+有了type alias就不一样了，类型T1的实现我们可以迁移到lib2下，同时我们在原来的lib下定义一个lib2下T1的别名`[type T1 = lib2.T1]`，这样已有的第三方的引用就可以不用修改也可以正常使用, 新的引用可以使用lib2/T1
+
+* 类型别名和类型定义的区别  
+我们基于一个类型创建一个新类型，称之为defintion；基于一个类型创建一个别名，称之为alias，这就是他们最大的区别。
+```
+  type MyInt1 int    // 类型定义
+  type MyInt2 = int  // 类型别名
+```
+
 #### 基本数据类型
 * integer  
  1. int有可能是32位也有可能是64位，即使同样的机器配置也有可能不同，具体和编译器有关
@@ -54,36 +84,6 @@
  5. untyped constants  
     many constant are not committed to a particular type  
     就是说一个常量你不知道他的类型，比如：22，到底是int32还是int64，你不知道，所以叫untyped
-
-#### 类型
-* 类型声明   
- 1. type name underlying-type: type Celsius float64
-
- 2. 一种新的类型，即使是和underlying-type也不能作比较和运算(必须显示转换)
-
- 3. underlying-type 支持的运算新类型也支持哦，包括输出时的%T也可以匹配
-
- 4. 一般用来重命名一些比较复杂的数据类型，这样书写比较方便
-
-* 內建的类型别名  
-在Go 1.9中, 内部其实使用了类型别名的特性. 比如内建的byte类型，其实是uint8的类型别名，而rune其实是int32的类型别名  
-```
-  type byte = uint8
-  type rune = int32
-```
-
-* 类型别名主要作用  
-类型别名的设计初衷是为了解决代码重构时，类型在包(package)之间转移时产生的问题  
-比如我们有一个导出的类型flysnow.org/lib/T1，现在要迁移到另外一个package中, 比如flysnow.org/lib2/T1中  
-没有type alias的时候我们这么做，就会导致其他第三方引用旧的package路径的代码，都要统一修改到lib2/T1，不然无法使用  
-有了type alias就不一样了，类型T1的实现我们可以迁移到lib2下，同时我们在原来的lib下定义一个lib2下T1的别名`[type T1 = lib2.T1]`，这样已有的第三方的引用就可以不用修改也可以正常使用, 新的引用可以使用lib2/T1
-
-* 类型别名和类型定义的区别  
-我们基于一个类型创建一个新类型，称之为defintion；基于一个类型创建一个别名，称之为alias，这就是他们最大的区别。
-```
-  type MyInt1 int    // 类型定义
-  type MyInt2 = int  // 类型别名
-```
 
 ####  类型转换
 
