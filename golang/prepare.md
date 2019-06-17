@@ -61,7 +61,7 @@ go语言程序， 不具备命令源码文件的那两个特征的源码文件�
 ```
 
 * 图示  
-![源码文件类型](./source_file_type.png)
+![源码文件类型](./pic/source_file_type.png)
 
 go语言命令  
 
@@ -210,6 +210,11 @@ when in doubt, use a pointer receiver.
 
 
 * Interface name  
+
   * 一个函数的接口以er结尾，如：Reader  Writer.  
   * 两个函数的接口数组结合两个函数名，如：ReadWriter.  
   * 3个以上的函数接口名类似于结构体名，如：Car.
+  
+  
+* 注释示例
+![注释示例](./pic/comment_demo.png)
