@@ -6,6 +6,24 @@ A value of interface type can hold any value that implements those methods. 必�
 
 如果T实现了某接口的方法但是*T没有实现，那么只能把T赋值给该接口变量，\*T是不可以的.  
 
+#### 结构的存储结构
+
+```
+ type iface struct {
+   tab  *itab                                                                                                                                                                           
+   data unsafe.Pointer
+ }
+ 
+ // layout of Itab known to compilers allocated in non-garbage-collected memory                                                                                                           
+ type itab struct {                                                                                                                                                                           
+   inter *interfacetype
+   _type *_type
+   hash  uint32 // copy of _type.hash. Used for type switches.
+   _     [4]byte
+   fun   [1]uintptr // variable sized. fun[0]==0 means _type does not implement inter.
+ }
+```
+
 #### interface value  
 
 * Calling a method on an interface value executes the method of the same name on its underlying type(多态)
@@ -59,7 +77,13 @@ empty interface是interface本身就是空的里边没有任何方法，用来�
   func (e *MyError) Error() string { return fmt.Sprintf("at %v, %s", e.When, e.What) } 把类型&MyError当做error处理
 ```
 
-* io.Reader
+#### 接口的嵌入
+
+接口类型间的嵌入不会涉及方法间的"屏蔽". 只要组合的接口之间有同名的方法就会产生冲突, 从而无法通过编译, 即使同名方法的签名彼此不同也会是如此.  
+
+Go 语言团队鼓励声明体量较小的接口, 通过这种接口间的组合来扩展程序、增加程序的灵活性.  
+
+io包中的接口嵌入示例  
 ```
   type Reader interface {
     Read(p []byte) (n int, err error)
