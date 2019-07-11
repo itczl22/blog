@@ -162,21 +162,21 @@ FastCGI接口方式采用C/S结构, 可以将HTTP服务器和脚本解析服务�
         |
       Nginx
         |
-路由到www.itczl.com/index.php
+ 路由到www.itczl.com/index.php
         |
-加载nginx的fast-cgi模块
+ 加载nginx的fast-cgi模块
         |
-fast-cgi监听127.0.0.1:9000地址
+ fast-cgi监听127.0.0.1:9000地址
         |
-www.itczl.com/index.php请求到达127.0.0.1:9000
+ www.itczl.com/index.php请求到达127.0.0.1:9000
         |
-php-fpm 监听127.0.0.1:9000
+ php-fpm 监听127.0.0.1:9000
         |
-php-fpm 接收到请求，启用worker进程处理请求
+ php-fpm 接收到请求，启用worker进程处理请求
         |
-php-fpm 处理完请求，返回给nginx
+ php-fpm 处理完请求，返回给nginx
         |
-nginx将结果通过http返回给浏览器
+ nginx将结果通过http返回给浏览器
 ```        
         
 #### php-fpm.conf
