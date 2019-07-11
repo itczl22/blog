@@ -182,6 +182,8 @@ nginx将结果通过http返回给浏览器
 #### php-fpm.conf
 
 * pm = static  
+  * 标识fpm子进程的产生模式  
+  * 一般推荐用static, 优点是不用动态的判断负载情况, 提升性能, 缺点是多占用些系统内存资源
 ```
 ; Choose how the process manager will control the number of child processes.
 ; Possible Values:
@@ -208,11 +210,12 @@ nginx将结果通过http返回给浏览器
 ;                                         an idle process will be killed.
 ;pm = dynamic
 ```
-  * 标识fpm子进程的产生模式  
-  * 一般推荐用static, 优点是不用动态的判断负载情况, 提升性能, 缺点是多占用些系统内存资源
-
   
 * pm.max_children = 256  
+  * php-fpm创建的worker进程数, 也是同时能处理的最大请求数
+  * 假设max_children设置的较小, 比如5-10个, 那么php-cgi就会"很累", 处理速度也很慢, 等待的时间也较长
+  * 如果长时间没有得到处理的请求就会出现504 Gateway Time-out这个错误, 而正在处理的很累的那几个php-cgi如果遇到了问题就会出现502 Bad gateway这个错误
+  * 正常情况下每一个php-cgi所耗费的内存在20M左右, 256*20M = 5.12G
 ```
 ; The number of child processes to be created when pm is set to 'static' and the 
 ; maximum number of child processes when pm is set to 'dynamic' or 'ondemand'.
@@ -225,13 +228,14 @@ nginx将结果通过http返回给浏览器
 ; Note: This value is mandatory.
 ;pm.max_children = 5
 ```
-  * php-fpm创建的worker进程数, 也是同时能处理的最大请求数
-  * 假设max_children设置的较小, 比如5-10个, 那么php-cgi就会"很累", 处理速度也很慢, 等待的时间也较长
-  * 如果长时间没有得到处理的请求就会出现504 Gateway Time-out这个错误, 而正在处理的很累的那几个php-cgi如果遇到了问题就会出现502 Bad gateway这个错误
-  * 正常情况下每一个php-cgi所耗费的内存在20M左右, 256*20M = 5.12G
 
   
 * pm.max_requests = 10000
+  * 最大处理请求数是指一个php-fpm的worker进程在处理多少个请求后就终止掉, master进程会重新respawn一个新的
+  * 这个配置的主要目的是避免php解释器或程序引用的第三方库造成的内存泄露
+  * 当一个 PHP-CGI 进程处理的请求数累积到 max_requests 个后，自动重启该进程
+  * 502是后端 PHP-FPM 不可用造成的, 间歇性的502一般认为是由于 PHP-FPM 进程重启造成的
+  * 正是因为这个机制, 在高并发中, 经常导致 502 错误
 ```
 ; The number of requests each child process should execute before respawning.
 ; This can be useful to work around memory leaks in 3rd party libraries. For
@@ -239,12 +243,6 @@ nginx将结果通过http返回给浏览器
 ; Default Value: 0
 ;pm.max_requests = 500
 ```
-  * 最大处理请求数是指一个php-fpm的worker进程在处理多少个请求后就终止掉, master进程会重新respawn一个新的
-  * 这个配置的主要目的是避免php解释器或程序引用的第三方库造成的内存泄露
-  * 当一个 PHP-CGI 进程处理的请求数累积到 max_requests 个后，自动重启该进程
-  * 502是后端 PHP-FPM 不可用造成的, 间歇性的502一般认为是由于 PHP-FPM 进程重启造成的
-  * 正是因为这个机制, 在高并发中, 经常导致 502 错误
-
   
 * pm.start_servers = 2
 ```
