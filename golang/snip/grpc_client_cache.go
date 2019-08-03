@@ -1,4 +1,3 @@
-```
 package transport
 
 import (
@@ -10,8 +9,10 @@ import (
 )
 
 var (
+	// grpcCache 连接池管理器
 	grpcCache grpcClientCache
-    maxConnsNum int = 10
+	// maxConnsNum 单host最大连接数
+	maxConnsNum int = 10
 )
 
 // grpcClientCache host->conns 的映射
@@ -85,4 +86,3 @@ func (this *grpcClientPool) getConn() (*grpc.ClientConn, error) {
 func createGRPCClient(address string) (*grpc.ClientConn, error) {
 	return grpc.Dial(address, grpc.WithInsecure())
 }
-```
