@@ -1,4 +1,4 @@
-package transport
+package snip
 
 import (
 	"math/rand"
@@ -54,6 +54,8 @@ func createGRPCClientPool(address string) *grpcClientPool {
 }
 
 // getConn 获取指定host的一个连接
+// 这里是懒加载模式, 即来一个请求创建一个连接, 直到连接数达到maxConnNum
+// 还有一种是预加载模式, 即第一个请求来的时候直接创建maxConnsNum个连接, 后边请求只从连接池读取而不用创建
 func (this *grpcClientPool) getConn() (*grpc.ClientConn, error) {
 	this.RLock()
 	if len(this.conns) == this.maxNum {
