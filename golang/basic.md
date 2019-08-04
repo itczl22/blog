@@ -73,7 +73,7 @@
     To avoid conversions and unnecessary memory allocation, bytes.Buffer is used
 
 * constants  
- 1. The underlying type of every constant is a basic type : boolean, string, or number.
+ 1. The underlying type of every constant is a basic type : boolean, string, or number. 如: const timeout 100*time.Millisecond, 其中time.Duration的底层类型是int64所以可以声明常量
 
  2. 和变量的声明一样，可以指定类型，也可以不指定但是需要给初始值
 
