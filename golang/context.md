@@ -53,8 +53,9 @@ type Context interface {
    // Deadline 方法获取设置的dateline, 如果没有设置则ok == false
    Deadline() (deadline time.Time, ok bool)
 
-   // Done 方法返回一个只读chan, 在goroutine中通过监听 Done 方法返回的chan, 如果该方法返回的chan可以读取, 则意味着parent context已经发起了取消请求
-   // 此时应该做一些清理操作了, 然后退出goroutine, 释放资源. 之后 Err 方法会返回一个错误告知为什么 Context 被取消
+   // Done 方法返回一个只读chan, 在goroutine中通过监听 Done 方法返回的chan, 如果该方法返回的chan可以读取
+   // 则意味着parent context已经发起了取消请求, 此时应该做一些清理操作了, 然后退出goroutine, 释放资源
+   // 之后 Err 方法会返回一个错误告知为什么 Context 被取消
    // Done is provided for use in select statements:
    //                                                                                                                                                                                       
    //  // Stream generates values with DoSomething and sends them to out
