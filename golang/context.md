@@ -49,19 +49,46 @@ ctx.Value("trace_id").(string)
 
 **Context**
 ```
- type Context interface {
+type Context interface {
    // Deadline 方法获取设置的dateline, 如果没有设置则ok == false
    Deadline() (deadline time.Time, ok bool)
 
-   // Done 方法返回一个只读chan, 在goroutine中通过监听 Done 方法返回的chan, 如果该方法返回的chan可以读取, 则意味着parent context已经发起了取消请求, 此时应该做一些清理操作了, 然后退出goroutine, 释放资源. 之后 Err 方法会返回一个错误告知为什么 Context 被取消
+   // Done 方法返回一个只读chan, 在goroutine中通过监听 Done 方法返回的chan, 如果该方法返回的chan可以读取, 则意味着parent context已经发起了取消请求
+   // 此时应该做一些清理操作了, 然后退出goroutine, 释放资源. 之后 Err 方法会返回一个错误告知为什么 Context 被取消
+   // Done is provided for use in select statements:
+   //                                                                                                                                                                                       
+   //  // Stream generates values with DoSomething and sends them to out
+   //  // until DoSomething returns an error or ctx.Done is closed.
+   //  func Stream(ctx context.Context, out chan<- Value) error {
+   //      for {
+   //          v, err := DoSomething(ctx)
+   //          if err != nil {
+   //              return err
+   //          }
+   //          select {
+   //          case <-ctx.Done():
+   //              return ctx.Err()
+   //          case out <- v:
+   //          }
+   //      }
+   //  }
+   // 所以可以通过这种方式来实现pipeline
+   // See https://blog.golang.org/pipelines for more examples of how to use  a Done channel for cancelation.
    Done() <-chan struct{}
 
-   // Err 方法返回context被取消的原因
+   // If Done is not yet closed, Err returns nil.
+   // If Done is closed, Err returns a non-nil error explaining why: Canceled if the context was canceled
+   // or DeadlineExceeded if the context's deadline passed
    Err() error
 
    // Value 方法获取该Context上绑定的值, 这个值一般是并发安全的
+   // key必须是全局唯一的, A key can be any type that supports equality
+   //  packages should define keys as an unexported type to avoid collisions.   
+   //  key is an unexported type for keys defined in this package.
+   // This prevents collisions with keys defined in other packages.
+   // 设置和获取key的时候都通过封装对应的函数来是实现, 而不应该直接对外暴露key
    Value(key interface{}) interface{}
- }
+}
 ```
 
 **注意**  
