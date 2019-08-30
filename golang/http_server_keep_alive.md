@@ -1,5 +1,5 @@
 * server_example.go
-```
+```go
 svr := &http.Server{
 	Addr:              "127.0.0.1:8080",
 	Handler:           myHandler,
@@ -13,7 +13,7 @@ log.Println(svr.ListenAndServer())
 ```
 
 * server.ListenAndServe
-```
+```go
 func (srv *Server) ListenAndServe() error {
 	// ...
 	ln, err := net.Listen("tcp", addr)
@@ -23,7 +23,7 @@ func (srv *Server) ListenAndServe() error {
 ```
 
 * server.Serve
-```
+```go
 func (srv *Server) Serve(l net.Listener) error {
 	// ...
 	for {
@@ -41,7 +41,7 @@ func (srv *Server) Serve(l net.Listener) error {
 ```
 
 * conn.serve
-```
+```go
 func (c *conn) serve(ctx context.Context) {
 	// ...
 	defer func() {
@@ -88,7 +88,7 @@ func (c *conn) serve(ctx context.Context) {
 ```
 
 * conn.readRequest
-```
+```go
 // readRequest 只读取header
 func (c *conn) readRequest(ctx context.Context) (w *response, err error) {
 	// ...
