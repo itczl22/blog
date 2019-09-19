@@ -12,14 +12,13 @@ tr := &http.Transport{
 	}).Dial,
 	TLSHandshakeTimeout:   10 * time.MilliSecond,
 	ResponseHeaderTimeout: 10 * time.MilliSecond,
-	ExpectContinueTimeout: 1 * time.Second,  
-    
-	IdleConnTimeout:       1 * time.Second,     
+	ExpectContinueTimeout: 1 * time.Second,      
+	IdleConnTimeout:       1 * time.Second,  
+	MaxIdleConns:	       1000,     // 最大连接数
 	MaxIdleConnsPerHost:   100,      // 默认是2, 对于请求量均匀高并发的服务来说IdleConnTimeout内连接不会收不到请求, 所以空闲连接不会很多.
-                                              // 但是对于请求量不均匀的服务, 如果最大空闲连接设置小了, 请求上涨时大量建立连接, 
-                                              // 请求下降时大量关闭连接, 如此循环会造成大量的time_wait
-    
-	MaxConnsPerHost:       3000    // 单机最大连接数，如果服务端有10台机器就会有30000个最大连接. 没啥用啊？做负载均衡？
+                                         // 但是对于请求量不均匀的服务, 如果最大空闲连接设置小了, 请求上涨时大量建立连接, 
+                                         // 请求下降时大量关闭连接, 如此循环会造成大量的time_wait    
+	MaxConnsPerHost:       3000      // 单机最大连接数，如果服务端有10台机器就会有30000个最大连接. 没啥用啊？做负载均衡？
 	MaxResponseHeaderBytes: 1 << 20,
 }
 
@@ -165,6 +164,14 @@ func (t *Transport) roundTrip(req *Request) (*Response, error) {
     // if the request is idempotent and either has no body or has its Request.GetBody defined.    
     for {
         // ...
+	// treq gets modified by roundTrip, so we need to recreate for each retry.
+	treq := &transportRequest{Request: req, trace: trace}
+	cm, err := t.connectMethodForRequest(treq)
+	if err != nil {
+		req.closeBody()
+		return nil, err
+	}
+	
         // 获取一个持久连接
         // Get the cached or newly-created connection to either the
         // host (for http or https), the http proxy, or the http proxy
