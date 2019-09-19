@@ -264,6 +264,7 @@ func (t *Transport) getConn(treq *transportRequest, cm connectMethod) (*persistC
 // 获取链接会优先从连接池中获取，如果连接池中没有可用的连接，则会创建一个连接或者从刚刚释放的连接中获取一个
 // 这两个过程时同时进行的，谁先获取到连接就用谁的
 ```
+![获取连接时序图](./pic/getConn.png)
 
 * transport.dialConn
 ```go
