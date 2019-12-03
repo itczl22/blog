@@ -37,11 +37,11 @@ __go module__
   * Each dependency requirement is written as a module path and a specific semantic version.
   * 如果模块没有依赖任然建议加入go.mod: This supports working outside of GOPATH, helps communicate to the ecosystem that you are opting in to modules, and in addition the module directive in your go.mod serves as a definitive declaration of the identity of your code
   * 语法
-    module to define the module path;
-    go to set the expected language version;
-    require to require a particular module at a given version or later;
-    exclude to exclude a particular module version from use; 
-    replace to replace a module version with a different module version.
+    module to define the module path;  
+    go to set the expected language version;  
+    require to require a particular module at a given version or later;  
+    exclude to exclude a particular module version from use;   
+    replace to replace a module version with a different module version. 一般用于本地代码库依赖  
 
 * go.sum
   * go.sum contains the expected cryptographic checksums of the content of specific module versions.
@@ -49,11 +49,13 @@ __go module__
   * Note that go.sum is not a lock file, it provides enough information for reproducible builds
 
 
-### Goproxy
-* 官方代理: go env -w GOPROXY=proxy.golang.org,direct
+### Go env
+* goproxy 模块代理  
+官方代理: go env -w GOPROXY=proxy.golang.org,direct    
+国内代理: go env -w GOPROXY=goproxy.cn,direct  
 
-* 国内代理: go env -w GOPROXY=https://goproxy.cn,direct
-
+* goprivate 私有库, 表示匹配这个模式的不需要走代理, 一般用于公司内部的代码仓库   
+go env -w GOPRIVATE=\*.corp.example.com,rsc.io/private
 
 __示例代码__
 ```
@@ -84,11 +86,11 @@ Packages in subdirectories have import paths consisting of the module path plus 
 
 ### Adding a dependency
 
-直接import需要的module, 比如：import "rsc.io/quote", 这样在编译的时候会自动去
+直接import需要的module, 比如：import "rsc.io/quote", 这样在编译的时候会自动拉取
 
-When it encounters an import of a package not provided by any module in go.mod, the go command automatically looks up the module containing that package from GOPROXY and adds it to go.mod, using the latest version. (“Latest” is defined as the latest tagged stable (non-prerelease) version, or else the latest tagged prerelease version, or else the latest untagged version.)
+When it encounters an import of a package not provided by any module in go.mod, the go command automatically looks up the module containing that package from GOPROXY except GOPRIVATE and adds it to go.mod, using the latest version. (“Latest” is defined as the latest tagged stable (non-prerelease) version, or else the latest tagged prerelease version, or else the latest untagged version.)
 
-同时会下载isc.io/quote的依赖包, 但是只有直接依赖的包会加入到go.mod文件
+同时会下载isc.io/quote的依赖包, 但是只有直接依赖的包会加入到go.mod文件, 下载的文件存放到$GOPATH/pkg/mod下
 
 cat go.mod
 ```
@@ -135,6 +137,7 @@ go list -m -version rsc.io/sampler  list the available tagged versions of that 
 
 go mod tidy 移除所有不需要的依赖
 
+go env -w key=val 设置go环境变量
 
 ### 参考文档
 
