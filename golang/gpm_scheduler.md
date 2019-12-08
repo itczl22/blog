@@ -147,6 +147,7 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 
 
 ===============================================================================================
+* sysmon
 Go scheduler 会启动一个后台线程 sysmon，用来检测长时间（超过 10 ms）运行的 goroutine，将其调度到 global runqueues。这是一个全局的 runqueue，优先级比较低，以示惩罚。
 
 1. goroutine被抢占调度
