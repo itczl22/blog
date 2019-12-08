@@ -124,6 +124,11 @@ __用户线程 和 内核线程 的关系 及映射模型__
 
 #### Go Scheduler
 ![goroutine调度图](./pic/gpm.jpg)
+* 正常调度
+
+* 空闲
+
+* asd
 
 1. goroutine被抢占调度
 Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要：
