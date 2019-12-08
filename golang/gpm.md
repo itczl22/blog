@@ -125,7 +125,7 @@ __用户线程 和 内核线程 的关系 及映射模型__
 #### Go Scheduler
 ![goroutine调度图](./pic/gpm.jpg)
 * 正常调度
-
+![busy_scheduler.png](0)
 * 空闲
 
 * asd
