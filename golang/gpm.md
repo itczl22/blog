@@ -122,7 +122,7 @@ __用户线程 和 内核线程 的关系 及映射模型__
  * P (Processor): 即为G和M的调度对象, 用来调度G和M之间的关联关系. 对G来说, P逻辑处理器相当于CPU核, G只有绑定到P逻辑处理器才能被调度. 对M来说, P提供了相关的执行环境(context), 如内存分配状态(mcache), 任务队列(G)等, P的数量决定了系统内最大可并行的G的数量(前提: 物理CPU核数 >= P的数量), P的数量由GOMAXPROCS决定, 但是不论GOMAXPROCS设置为多大, P的数量最大为256. P可以类比openresty里边nginx的worker
 
 
-#### go scheduler
+#### Go Scheduler
 * ![goroutine调度图](./pic/gpm.jpg)
 
 1. goroutine被抢占调度
