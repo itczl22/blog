@@ -134,7 +134,7 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 部分 P 中挂载的 runable queue已经没有剩余的 goroutine 可供调度, 为了能够让所有的 M 的利用率达到最大, golang runtime 会采取以下两种机制来处理 idle 状态:
   * 从 global runable queue 中选取 goroutine
 
-  * 若 global runable queue 中也没有 goroutine, 随机选取选取一个 P, 从其挂载的 local runable queue 中 steal 走一半的 goroutine
+  * 若 global runable queue 中也没有 goroutine, 随机选取选取一个 P, 从其挂载的 local runable queue 中 steal 走一半的 goroutine. 这被称为 Work-stealing，Go 从 1.1 开始实现
 
 * syscall
   * 如果G被阻塞在某个system call操作上, 那么不光G会阻塞, 执行该 G 的 M 也会解绑 P(实质是被sysmon抢走了), 与 G 一起进入sleep状态. 如果此时有idle的 M, 则 P 与其绑定继续执行其他 G; 如果没有idle M, 但仍然有其他G要去执行, 那么就会创建一个新M
