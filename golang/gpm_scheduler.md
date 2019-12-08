@@ -134,15 +134,12 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 部分 P 中挂载的 runable queue已经没有剩余的 goroutine 可供调度, 为了能够让所有的 M 的利用率达到最大, golang runtime 会采取以下两种机制来处理 idle 状态:
   * 从 global runable queue 中选取 goroutine
 
-  * 若 global runable queue 中也没有 goroutine, 随机选取选取一个 P, 从其挂载的 local runable queue 中 steal 走一半的 goroutine. 这被称为 Work-stealing，Go 从 1.1 开始实现
+  * 若 global runable queue 中也没有 goroutine, 随机选取选取一个 P, 从其挂载的 local runable queue 中 steal 走一半的 goroutine
 
-* Synchronous System Calls
+* syscall
   * 如果G被阻塞在某个system call操作上, 那么不光G会阻塞, 执行该 G 的 M 也会解绑 P(实质是被sysmon抢走了), 与 G 一起进入sleep状态. 如果此时有idle的 M, 则 P 与其绑定继续执行其他 G; 如果没有idle M, 但仍然有其他G要去执行, 那么就会创建一个新M
 
   * unblock 之后, 旧的 M 和 G 显然是缺少了一个 P, 所以他会向上边别的M从他这拿走P和queue一样, 看是否有机会能够从其他的 M 上 steal 到一个 P 和其挂载的 local runable queue. 如果这个 steal 的行为失败, 那么它将会把带着的 G 丢到 global runable queue 中, 此时M处于自旋状态[spining Thread], runtime最多会保留 GOMAXPROCS 个 spining thread
-
-
-* Asynchronous System Calls
 
 
 
@@ -174,4 +171,6 @@ sysmon每20us~10ms启动一次，按照《Go语言学习笔记》中的总结，
 更关键地是，如果它们在网络输入操作、Sleep操作、Channel操作或 sync包的原语操作上阻塞了，也不会导致承载其多路复用的线程阻塞。如果一个goroutine在上述某个操作上阻塞，Go运行时会调度另外一 个goroutine。即使成千上万的Goroutine被创建了出来，如果它们阻塞在上述的某个操作上，也不会浪费系统资源。从操作系统的视角来看，你的程序的行为就像是一个事件驱动的C程序似的。
 
 
+4. work-stealing
+当然还有一个 work-stealing调度算法，当M执行了一些G后,如果它的queue为空，它会随机的选择另外一个P,从它的queue中取走一半的G到自己的queue中执行
 
