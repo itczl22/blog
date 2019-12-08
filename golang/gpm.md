@@ -136,9 +136,9 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 
 * syscall
 当我们的 goroutine 逻辑中有使用「系统调用」的代码时, 其对应的 M 会携带相应的G一同被阻塞, 此时 P 中挂载的 runable goroutine queue 中的 goroutine 在短时间内将不会被这个 M 调度执行.
-  * 而被 block 住的 M 上挂载的 P 连同 runable goroutine queue 全部切换到到一个空闲的 M 上等待被调度执行. 而之前那个被 block 住的 M 将会带着一个 G 等待被 unblock
+  * 被 block 住的 M 上挂载的 P 连同 runable goroutine queue 全部切换到到一个空闲的 M 上等待被调度执行. 而之前那个被 block 住的 M 将会带着一个 G 等待被 unblock
 
-  * unblock 之后，对于一个「最小调度单位」而言，旧的 M 和 G 显然是缺少了一个 P 的。所以它按照「之前别人对付它的方式」看是否有机会能够从其他的 M 上 steal 到一个 P 和其挂载的 runable goroutine queue。如果这个 steal 的行为失败，那么它将会把带着的 G 丢到 global runable queue 中。至于这个 M 如何被进一步处理，那又是一个新的问题了，我们在剩余的篇幅中将会提到。
+  * unblock 之后, 旧的 M 和 G 显然是缺少了一个 P, 所以他看是否有机会能够从其他的 M 上 steal 到一个 P 和其挂载的 runable goroutine queue。如果这个 steal 的行为失败，那么它将会把带着的 G 丢到 global runable queue 中。至于这个 M 如何被进一步处理，那又是一个新的问题了，我们在剩余的篇幅中将会提到。
 
 
 1. goroutine被抢占调度
