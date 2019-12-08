@@ -136,6 +136,8 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 * syscall
 当我们的 goroutine 逻辑中有使用「系统调用」的代码时, 其对应的 M 会携带响应的G被阻塞, 此时 P 中挂载的 runable goroutine queue 中的 goroutine 在短时间内将不会被这个 M 调度执行. 而被 block 住的 M 上挂载的 P 连同 runable goroutine queue 全部切换到到一个空闲的 M 上等待被调度执行. 而之前那个被 block 住的 M 将会带着一个 G 等待被 unblock
 
+ Unblock 之后，对于一个「最小调度单位」而言，旧的 M 和 G 显然是缺少了一个 P 的。所以它按照「之前别人对付它的方式」看是否有机会能够从其他的 M 上 steal 到一个 P 和其挂载的 runable goroutine queue。如果这个 steal 的行为失败，那么它将会把带着的 G 丢到 global runable queue 中。至于这个 M 如何被进一步处理，那又是一个新的问题了，我们在剩余的篇幅中将会提到。
+
 1. goroutine被抢占调度
 Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要：
 sysmon每20us~10ms启动一次，按照《Go语言学习笔记》中的总结，sysmon主要完成如下工作：
