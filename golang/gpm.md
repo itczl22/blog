@@ -126,14 +126,15 @@ __用户线程 和 内核线程 的关系 及映射模型__
 ![goroutine调度图](./pic/gpm.jpg)
 * busy
 P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调度到 M 执行. 当前的 goroutine 被执行完成之后将从队列中弹出, P 会不断的重复上述的过程处理 goroutine. M 上都有正在运行的 G，没有空闲的 P，也没有空闲的M
-![busy scheduler.png](./pic/busy_scheduler.png)
+![busy_scheduler.png](./pic/busy_scheduler.png)
 
 * idle
 部分 P 中挂载的 runable goroutine queue已经没有剩余的 goroutine 可供调度, 为了能够让所有的 M 的利用率达到最大, golang runtime 会采取以下两种机制来处理 idle 状态:
   * 从 global runable goroutine queue 中选取 goroutine
   * 若 global runable goroutine queue 中也没有 goroutine, 随机选取选取一个 P, 从其挂载的 runable goroutine queue 中 steal 走一半的 goroutine
 
-* asd
+* syscall
+当我们的 goroutine 逻辑中有使用「系统调用」的代码时，其对应的 M 会被阻塞。此时 P 中挂载的 runable goroutine queue 中的 goroutine 在短时间内将不会被这个 M 调度执行
 
 1. goroutine被抢占调度
 Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要：
