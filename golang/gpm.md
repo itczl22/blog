@@ -126,7 +126,7 @@ __用户线程 和 内核线程 的关系 及映射模型__
 ![goroutine调度图](./pic/gpm.jpg)
 * busy
 P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调度到 M 执行. 当前的 goroutine 被执行完成之后将从队列中弹出, P 会不断的重复上述的过程处理 goroutine. M 上都有正在运行的 G，没有空闲的 P，也没有空闲的M
-![busy_scheduler.png](0)
+![busy scheduler.png](./pic/busy_scheduler.png)
 
 * idle
 部分 P 中挂载的 runable goroutine queue已经没有剩余的 goroutine 可供调度, 为了能够让所有的 M 的利用率达到最大, golang runtime 会采取以下两种机制来处理 idle 状态:
