@@ -171,20 +171,3 @@ sysmon每20us~10ms启动一次，按照《Go语言学习笔记》中的总结，
 4. work-stealing
 当然还有一个 work-stealing调度算法，当M执行了一些G后,如果它的queue为空，它会随机的选择另外一个P,从它的queue中取走一半的G到自己的queue中执行
 
-
-
-局队列是需要有锁参与的，效率肯定不高
-
-
-
-#### goroutine调度的几种情况
-1. 每个p-m都有可运行的goroutine时
-
-2. 有的p-m没有可运行的goroutine时
-
-
-
-全局队列是需要有锁参与的，效率肯定不高
-
-
-参考：https://www.jianshu.com/p/5a4fc2729c17
