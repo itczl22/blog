@@ -139,7 +139,8 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
   * 被 block 住的 M 上挂载的 P 连同 runable goroutine queue 全部切换到到一个空闲的 M 上等待被调度执行. 而之前那个被 block 住的 M 将会带着一个 G 等待被 unblock
 
   * unblock 之后, 旧的 M 和 G 显然是缺少了一个 P, 所以他会向上边别的M从他这拿走P和queue一样, 看是否有机会能够从其他的 M 上 steal 到一个 P 和其挂载的 runable goroutine queue. 如果这个 steal 的行为失败, 那么它将会把带着的 G 丢到 global runable queue 中, 此时M处于自旋状态[spining Thread]
-  *  
+
+  *  spinging thread 是指
 
 
 1. goroutine被抢占调度
