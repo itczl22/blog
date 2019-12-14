@@ -137,8 +137,6 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
   * 若 global runable queue 中也没有 goroutine, 随机选取选取一个 P, 从其挂载的 local runable queue 中 steal 走一半的 goroutine
 
 * Synchronous System Calls
-  * 如果G被阻塞在某个system call操作上, 那么不光G会阻塞, 执行该 G 的 M 也会解绑 P(实质是被sysmon抢走了), 与 G 一起进入sleep状态. 如果此时有idle的 M, 则 P 与其绑定继续执行其他 G; 如果没有idle M, 但仍然有其他G要去执行, 那么就会创建一个新M
-
   * unblock 之后, 旧的 M 和 G 显然是缺少了一个 P, 所以他会向上边别的M从他这拿走P和queue一样, 看是否有机会能够从其他的 M 上 steal 到一个 P 和其挂载的 local runable queue. 如果这个 steal 的行为失败, 那么它将会把带着的 G 丢到 global runable queue 中, 此时M处于自旋状态[spining Thread], runtime最多会保留 GOMAXPROCS 个 spining thread
 
   * This will make the system call is going to block the M  
@@ -146,6 +144,7 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
   * One example is file-based system calls. If you are using CGO which calls C functions will block the M as well
 
   * If an M already exists because of a previous swap, this transition is quicker than having to create a new M.
+
 ![同步系统调用](./pic/sync.png)
 
 * Asynchronous System Calls
