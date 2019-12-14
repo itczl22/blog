@@ -155,6 +155,10 @@ This helps to keep the M available to execute other Goroutines in the P’s LRQ 
 
 ![异步系统调用](./pic/asynchronously.png)
 
+
+### Work-stealing
+
+
 ===============================================================================================
 
 * sysmon
