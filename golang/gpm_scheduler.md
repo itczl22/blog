@@ -176,6 +176,14 @@ runtime.schedule() {
 
 ### Go调度器的查看方法
 `GODEBUG=schedtrace=1000 ./test`
+SCHED 4026ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]  
+SCHED 5032ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]
+SCHED 6038ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]
+SCHED 7043ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=9 runqueue=0 [0 0 0 0 0 0 0 0]
+SCHED 8049ms: gomaxprocs=8 idleprocs=6 threads=22 spinningthreads=1 idlethreads=7 runqueue=0 [0 0 0 0 0 0 0 0]
+SCHED 9055ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]
+SCHED 10060ms: gomaxprocs=8 idleprocs=7 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]
+SCHED 11067ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=9 runqueue=0 [0 0 0 0 0 0 0 0]
 
 SCHED 0ms: gomaxprocs=4 idleprocs=2 threads=6 spinningthreads=1 idlethreads=2 runqueue=129 [0 128 0 0]
 done!
