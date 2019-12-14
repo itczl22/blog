@@ -173,6 +173,27 @@ runtime.schedule() {
 ```
 定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局队列的G
 
+### Sysmon
+Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要. sysmon每20us~10ms启动一次，sysmon主要完成如下工作：
+* 释放闲置超过5分钟的span物理内存；
+
+* 如果超过2分钟没有垃圾回收，强制执行；
+
+* 将长时间未处理的netpoll结果添加到任务队列；
+
+* 向长时间运行的G任务发出抢占调度；
+
+* 收回因syscall长时间阻塞的P；
+
+* 我们看到sysmon将“向长时间运行的G任务发出抢占调度”，这个事情由retake实施：
+
+可以看出，如果一个G任务运行10ms，sysmon就会认为其运行时间太久而发出抢占式调度的请求。一旦G的抢占标志位被设为true，那么待这个G下一次调用函数或方法时，runtime便可以将G抢占，并移出运行状态，放入P的local runq中，等待下一次被调度
+
+### Spining Thread
+
+runtime最多会保留 GOMAXPROCS 个 spining thread
+
+scheduler ensures that there is at least one spinning M. This ensures that there are no runnable goroutines that can be otherwise running; and avoids excessive M blocking/unblocking.
 
 ### Go调度器的查看方法
 ```
@@ -196,21 +217,4 @@ SCHED 11067ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads
 * runqueue： go scheduler 全局队列中 G 的数量
 * [0 0 0 0 0 0 0 0]: 分别为8个 P 的 local queue 中的 G 的数量
 
-
-### Sysmon
-Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要. sysmon每20us~10ms启动一次，sysmon主要完成如下工作：
-* 释放闲置超过5分钟的span物理内存；
-* 如果超过2分钟没有垃圾回收，强制执行；
-* 将长时间未处理的netpoll结果添加到任务队列；
-* 向长时间运行的G任务发出抢占调度；
-* 收回因syscall长时间阻塞的P；
-* 我们看到sysmon将“向长时间运行的G任务发出抢占调度”，这个事情由retake实施：
-
-可以看出，如果一个G任务运行10ms，sysmon就会认为其运行时间太久而发出抢占式调度的请求。一旦G的抢占标志位被设为true，那么待这个G下一次调用函数或方法时，runtime便可以将G抢占，并移出运行状态，放入P的local runq中，等待下一次被调度
-
-### Spining Thread
-
-runtime最多会保留 GOMAXPROCS 个 spining thread
-
-scheduler ensures that there is at least one spinning M. This ensures that there are no runnable goroutines that can be otherwise running; and avoids excessive M blocking/unblocking.
 
