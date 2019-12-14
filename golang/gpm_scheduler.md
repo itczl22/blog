@@ -143,9 +143,10 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 
   * One example is file-based system calls. If you are using CGO which calls C functions will block the M as well
 
-  * If an M already exists because of a previous swap, this transition is quicker than having to create a new M.
-
 ![同步系统调用](./pic/sync.png)
+ If an M already exists because of a previous swap, this transition is quicker than having to create a new M.
+
+
 
 * Asynchronous System Calls
   * Go是通过异步的系统调用来处理高并发的网络io, 叫 network poller. 
