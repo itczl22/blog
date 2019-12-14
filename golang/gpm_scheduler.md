@@ -149,10 +149,10 @@ This helps to keep the M available to execute other Goroutines in the P’s LRQ 
 
 ![异步系统调用](./pic/asynchronously.png)
 
+===============================================================================================
 
 当阻塞在syscall上的G完成syscall调用后，G会去尝试获取一个可用的P，如果没有可用的P，那么G会被标记为runnable，之前的那个sleep的M将再次进入sleep。
 
-===============================================================================================
 * sysmon
 Go scheduler 会启动一个后台线程 sysmon，用来检测长时间（超过 10 ms）运行的 goroutine，将其调度到 global runqueues。这是一个全局的 runqueue，优先级比较低，以示惩罚。
 
