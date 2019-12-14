@@ -168,13 +168,8 @@ runtime.schedule() {
 ```
 定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局队列的G
 
-
-
-
-===============================================================================================
-
-* sysmon
-Go scheduler 会启动一个后台线程 sysmon，用来检测长时间（超过 10 ms）运行的 goroutine，将其调度到 global runqueues。这是一个全局的 runqueue，优先级比较低，以示惩罚。
+### sysmon
+Go scheduler 会启动一个后台线程 sysmon，用来检测长时间（超过 10 ms）运行的 goroutine，将其调度到 global runqueues. 这是一个全局的 runqueue, 优先级比较低, 以示惩罚
 
 1. goroutine被抢占调度
 Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要：
