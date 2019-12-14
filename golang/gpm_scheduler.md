@@ -113,7 +113,7 @@ __用户线程 和 内核线程 的关系 及映射模型__
 * goroutine要竞争的所谓'CPU'资源就是操作系统线程, 即内核线程
 
 
-#### GMP
+### GMP
 
  * G (Goroutine): 我们所说的协程, 每个Goroutine对象中的sched保存着其上下文信息. 每个Goroutine对应一个G结构体, G存储Goroutine的运行堆栈、状态以及任务函数, 可重用. G并非执行体, 每个G需要绑定到P才能被调度执行. goroutine stack的size默认设置为2k
 
@@ -122,7 +122,7 @@ __用户线程 和 内核线程 的关系 及映射模型__
  * P (Processor): 即为G和M的调度对象, 用来调度G和M之间的关联关系. 对G来说, P逻辑处理器相当于CPU核, G只有绑定到P逻辑处理器才能被调度. 对M来说, P提供了相关的执行环境(context), 如内存分配状态(mcache), 任务队列(G)等, P的数量决定了系统内最大可并行的G的数量(前提: 物理CPU核数 >= P的数量), P的数量由GOMAXPROCS决定, 但是不论GOMAXPROCS设置为多大, P的数量最大为256. P可以类比openresty里边nginx的worker
 
 
-#### Go Scheduler
+### Go Scheduler
 在 Go 的早期版本, 并没有 P 这个结构体, M 必须从一个全局的队列里获取要运行的 G, 因此需要获取一个全局的锁, 当并发量大的时候锁就成了瓶颈. 后来在 Go1.1 的实现里加上了 P 结构体, 每个 P 自己维护一个处于 Runnable 状态的 G 的队列, 解决了原来的全局锁问题. 但是global runable goroutine queue 依然存在.
 
 ![goroutine调度图](./pic/gpm.jpg)
@@ -157,6 +157,7 @@ This helps to keep the M available to execute other Goroutines in the P’s LRQ 
 
 
 ### Work-stealing
+
 
 
 ===============================================================================================
