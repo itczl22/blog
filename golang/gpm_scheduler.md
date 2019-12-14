@@ -192,9 +192,9 @@ SCHED 11067ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads
 * idleprocs: 处于 idle 状态的 P 的数量
 * threads:   os threads 的数量，包含 scheduler 使用的 m 数量，加上 runtime 自用的类似 sysmon 这样的 thread 的数量
 * spinningthreads: 处于自旋状态的 os thread 数量
-* idlethread: 处于 idle 状态的os thread的数量
-* runqueue： go scheduler全局队列中G的数量
-* [0 0 0 0]: 分别为8个P的local queue中的G的数量
+* idlethread: 处于 idle 状态的 os thread 的数量
+* runqueue： go scheduler 全局队列中 G 的数量
+* [0 0 0 0 0 0 0 0]: 分别为8个 P 的 local queue 中的 G 的数量
 
 
 ### Sysmon
