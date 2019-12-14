@@ -173,6 +173,36 @@ runtime.schedule() {
 ```
 定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局队列的G
 
+
+$ GODEBUG=schedtrace=1000 ./test
+
+// 测试1输出结果
+SCHED 0ms: gomaxprocs=4 idleprocs=2 threads=1003 spinningthreads=2 idlethreads=32 runqueue=0 [0 0 0 0]
+done!
+SCHED 1001ms: gomaxprocs=4 idleprocs=4 threads=1003 spinningthreads=0 idlethreads=1000 runqueue=0 [0 0 0 0]
+SCHED 2001ms: gomaxprocs=4 idleprocs=4 threads=1003 spinningthreads=0 idlethreads=1000 runqueue=0 [0 0 0 0]
+SCHED 3010ms: gomaxprocs=4 idleprocs=4 threads=1003 spinningthreads=0 idlethreads=1000 runqueue=0 [0 0 0 0]
+
+// 测试2输出结果
+SCHED 0ms: gomaxprocs=4 idleprocs=2 threads=6 spinningthreads=1 idlethreads=2 runqueue=129 [0 128 0 0]
+done!
+SCHED 1009ms: gomaxprocs=4 idleprocs=4 threads=6 spinningthreads=0 idlethreads=3 runqueue=0 [0 0 0 0]
+SCHED 2010ms: gomaxprocs=4 idleprocs=4 threads=6 spinningthreads=0 idlethreads=3 runqueue=0 [0 0 0 0]
+SCHED 3019ms: gomaxprocs=4 idleprocs=4 threads=6 spinningthreads=0 idlethreads=3 runqueue=0 [0 0 0 0]
+其中schedtrace日志每一行的字段意义:
+
+SCHED：调试信息输出标志字符串，代表本行是goroutine scheduler的输出；
+1001ms：即从程序启动到输出这行日志的时间；
+gomaxprocs: P的数量；
+idleprocs: 处于idle状态的P的数量；通过gomaxprocs和idleprocs的差值，我们就可知道执行go代码的P的数量；
+threads: os threads的数量，包含scheduler使用的m数量，加上runtime自用的类似sysmon这样的thread的数量；
+spinningthreads: 处于自旋状态的os thread数量；
+idlethread: 处于idle状态的os thread的数量；
+runqueue： go scheduler全局队列中G的数量；
+[0 0 0 0]: 分别为4个P的local queue中的G的数量。
+
+
+
 ### Sysmon
 Go scheduler 会启动一个后台线程 sysmon，用来检测长时间（超过 10 ms）运行的 goroutine，将其调度到 global runqueues. 这是一个全局的 runqueue, 优先级比较低, 以示惩罚
 
