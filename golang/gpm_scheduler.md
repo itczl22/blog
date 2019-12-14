@@ -146,7 +146,6 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
   * One example is file-based system calls. If you are using CGO which calls C functions will block the M as well
 
 
-
 * Asynchronous System Calls
   * Go是通过异步的系统调用来处理高并发的网络io, 叫 network poller. 
   * This is accomplished by using kqueue (MacOS), epoll (Linux) or iocp (Windows) within these respective OS’s.  
