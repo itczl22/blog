@@ -132,7 +132,7 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 
 * idle
 部分 P 中挂载的 local runable queue已经没有剩余的 goroutine 可供调度, 为了能够让所有的 M 的利用率达到最大, golang runtime 会采取以下两种机制来处理 idle 状态:
-  * 从 global runable queue 中选取 goroutine
+  * 定时从 global runable queue 中选取 goroutine
 
   * 若 global runable queue 中也没有 goroutine, 随机选取选取一个 P, 从其挂载的 local runable queue 中 steal 走一半的 goroutine
 
