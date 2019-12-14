@@ -143,7 +143,7 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 
 
 * Asynchronous System Calls
-
+![异步系统调用](./pic/asynchronously.png)
 
 
 当阻塞在syscall上的G完成syscall调用后，G会去尝试获取一个可用的P，如果没有可用的P，那么G会被标记为runnable，之前的那个sleep的M将再次进入sleep。
