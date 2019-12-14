@@ -142,7 +142,6 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
   * This will make the system call is going to block the M  
 
   * One example is file-based system calls. If you are using CGO which calls C functions will block the M as well
-
 ![同步系统调用](./pic/sync.png)
  If an M already exists because of a previous swap, this transition is quicker than having to create a new M.
 
