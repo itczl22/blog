@@ -186,13 +186,13 @@ SCHED 9055ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=
 SCHED 10060ms: gomaxprocs=8 idleprocs=7 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]
 SCHED 11067ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=9 runqueue=0 [0 0 0 0 0 0 0 0]
 ```
-* SCHED： 调试信息输出标志字符串，代表本行是goroutine scheduler的输出
+* SCHED： 调试信息输出标志字符串，代表本行是 goroutine scheduler 的输出
 * 4026ms：即从程序启动到输出这行日志的时间
-* gomaxprocs: P的数量
-* idleprocs: 处于idle状态的P的数量
-* threads:   os threads的数量，包含scheduler使用的m数量，加上runtime自用的类似sysmon这样的thread的数量
-* spinningthreads: 处于自旋状态的os thread数量
-* idlethread: 处于idle状态的os thread的数量
+* gomaxprocs: P 的数量
+* idleprocs: 处于 idle 状态的 P 的数量
+* threads:   os threads 的数量，包含 scheduler 使用的 m 数量，加上 runtime 自用的类似 sysmon 这样的 thread 的数量
+* spinningthreads: 处于自旋状态的 os thread 数量
+* idlethread: 处于 idle 状态的os thread的数量
 * runqueue： go scheduler全局队列中G的数量
 * [0 0 0 0]: 分别为8个P的local queue中的G的数量
 
