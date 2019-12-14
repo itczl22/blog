@@ -146,8 +146,9 @@ This will make the system call is going to block the M
 One example of a system call that can’t be made asynchronously is file-based system calls. If you are using CGO, there may be other situations where calling C functions will block the M as well.
 
 * Asynchronous System Calls
-go是通过异步的系统调用来处理高并发的网络io, 叫 network poller. This is accomplished by using kqueue (MacOS), epoll (Linux) or iocp (Windows) within these respective OS’s.  
-By using the network poller for networking system calls, the scheduler can prevent Goroutines from blocking the M when those system calls are made.  
+  * go是通过异步的系统调用来处理高并发的网络io, 叫 network poller. 
+  * This is accomplished by using kqueue (MacOS), epoll (Linux) or iocp (Windows) within these respective OS’s.  
+  * By using the network poller for networking system calls, the scheduler can prevent Goroutines from blocking the M when those system calls are made.  
 This helps to keep the M available to execute other Goroutines in the P’s LRQ without the need to create new Ms. This helps to reduce scheduling load on the OS.
 
 ![异步系统调用](./pic/asynchronously.png)
