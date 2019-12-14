@@ -187,9 +187,9 @@ SCHED 10060ms: gomaxprocs=8 idleprocs=7 threads=22 spinningthreads=0 idlethreads
 SCHED 11067ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=9 runqueue=0 [0 0 0 0 0 0 0 0]
 ```
 * SCHED： 调试信息输出标志字符串，代表本行是goroutine scheduler的输出
-* 1001ms：即从程序启动到输出这行日志的时间
+* 4026ms：即从程序启动到输出这行日志的时间
 * gomaxprocs: P的数量
-* idleprocs: 处于idle状态的P的数量；通过gomaxprocs和idleprocs的差值，我们就可知道执行go代码的P的数量
+* idleprocs: 处于idle状态的P的数量
 * threads:   os threads的数量，包含scheduler使用的m数量，加上runtime自用的类似sysmon这样的thread的数量
 * spinningthreads: 处于自旋状态的os thread数量
 * idlethread: 处于idle状态的os thread的数量
