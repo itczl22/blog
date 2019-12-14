@@ -143,7 +143,9 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 
 
 * Asynchronous System Calls
-go里边实现了异步的系统调用, 叫 netork poller. This is accomplished by using kqueue (MacOS), epoll (Linux) or iocp (Windows) within these respective OS’s.
+go里边实现了异步的系统调用, 叫 netork poller. This is accomplished by using kqueue (MacOS), epoll (Linux) or iocp (Windows) within these respective OS’s.  
+By using the network poller for networking system calls, the scheduler can prevent Goroutines from blocking the M when those system calls are made. This helps to keep the M available to execute other Goroutines in the P’s LRQ without the need to create new Ms. This helps to reduce scheduling load on the OS.
+
 ![异步系统调用](./pic/asynchronously.png)
 
 
