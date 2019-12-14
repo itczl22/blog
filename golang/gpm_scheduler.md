@@ -175,7 +175,8 @@ runtime.schedule() {
 
 
 ### Go调度器的查看方法
-`GODEBUG=schedtrace=1000 ./test`
+```
+$ GODEBUG=schedtrace=1000 ./comment_interface
 SCHED 4026ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]  
 SCHED 5032ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]
 SCHED 6038ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]
@@ -184,15 +185,8 @@ SCHED 8049ms: gomaxprocs=8 idleprocs=6 threads=22 spinningthreads=1 idlethreads=
 SCHED 9055ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]
 SCHED 10060ms: gomaxprocs=8 idleprocs=7 threads=22 spinningthreads=0 idlethreads=8 runqueue=0 [0 0 0 0 0 0 0 0]
 SCHED 11067ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=9 runqueue=0 [0 0 0 0 0 0 0 0]
-
-SCHED 0ms: gomaxprocs=4 idleprocs=2 threads=6 spinningthreads=1 idlethreads=2 runqueue=129 [0 128 0 0]
-done!
-SCHED 1009ms: gomaxprocs=4 idleprocs=4 threads=6 spinningthreads=0 idlethreads=3 runqueue=0 [0 0 0 0]
-SCHED 2010ms: gomaxprocs=4 idleprocs=4 threads=6 spinningthreads=0 idlethreads=3 runqueue=0 [0 0 0 0]
-SCHED 3019ms: gomaxprocs=4 idleprocs=4 threads=6 spinningthreads=0 idlethreads=3 runqueue=0 [0 0 0 0]
-其中schedtrace日志每一行的字段意义:
-
-SCHED：调试信息输出标志字符串，代表本行是goroutine scheduler的输出；
+```
+SCHED：	调试信息输出标志字符串，代表本行是goroutine scheduler的输出；
 1001ms：即从程序启动到输出这行日志的时间；
 gomaxprocs: P的数量；
 idleprocs: 处于idle状态的P的数量；通过gomaxprocs和idleprocs的差值，我们就可知道执行go代码的P的数量；
