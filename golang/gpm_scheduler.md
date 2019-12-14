@@ -113,7 +113,7 @@ __用户线程 和 内核线程 的关系 及映射模型__
 * goroutine要竞争的所谓'CPU'资源就是操作系统线程, 即内核线程
 
 
-#### 什么是 GMP
+#### GMP
 
  * G (Goroutine): 我们所说的协程, 每个Goroutine对象中的sched保存着其上下文信息. 每个Goroutine对应一个G结构体, G存储Goroutine的运行堆栈、状态以及任务函数, 可重用. G并非执行体, 每个G需要绑定到P才能被调度执行. goroutine stack的size默认设置为2k
 
