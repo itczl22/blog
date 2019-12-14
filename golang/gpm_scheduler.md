@@ -168,8 +168,8 @@ This helps to keep the M available to execute other Goroutines in the P’s LRQ 
      //     if not, check the global runnable queue.
      //     if not found, poll network.
   }
+  // 定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局队列的G
 ```
-定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局
 
 
 
