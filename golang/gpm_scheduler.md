@@ -148,8 +148,7 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 * Asynchronous System Calls
   * Go是通过异步的系统调用来处理高并发的网络io, 叫 network poller. 
   * This is accomplished by using kqueue (MacOS), epoll (Linux) or iocp (Windows) within these respective OS’s.  
-  * By using the network poller for networking system calls, the scheduler can prevent Goroutines from blocking the M when those system calls are made.  
-This helps to keep the M available to execute other Goroutines in the P’s LRQ without the need to create new Ms. This helps to reduce scheduling load on the OS.
+  * By using the network poller for networking system calls, the scheduler can prevent Goroutines from blocking the M when those system calls are made. This helps to keep the M available to execute other Goroutines in the P’s LRQ without the need to create new Ms. This helps to reduce scheduling load on the OS.
 
 ![异步系统调用](./pic/asynchronously.png)
 
@@ -198,7 +197,8 @@ sysmon每20us~10ms启动一次，按照《Go语言学习笔记》中的总结，
 更关键地是，如果它们在网络输入操作、Sleep操作、Channel操作或 sync包的原语操作上阻塞了，也不会导致承载其多路复用的线程阻塞。如果一个goroutine在上述某个操作上阻塞，Go运行时会调度另外一 个goroutine。即使成千上万的Goroutine被创建了出来，如果它们阻塞在上述的某个操作上，也不会浪费系统资源。从操作系统的视角来看，你的程序的行为就像是一个事件驱动的C程序似的。
 
 
+
  runtime最多会保留 GOMAXPROCS 个 spining thread
 
-
+ scheduler ensures that there is at least one spinning M. This ensures that there are no runnable goroutines that can be otherwise running; and avoids excessive M blocking/unblocking.
 
