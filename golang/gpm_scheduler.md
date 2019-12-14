@@ -143,7 +143,7 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 
 
 * Asynchronous System Calls
-异步的系统调用在go里边
+go里边实现了异步的系统调用, 叫 netork poller. This is accomplished by using kqueue (MacOS), epoll (Linux) or iocp (Windows) within these respective OS’s.
 ![异步系统调用](./pic/asynchronously.png)
 
 
