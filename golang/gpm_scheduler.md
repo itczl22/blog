@@ -168,7 +168,7 @@ runtime.schedule() {
 ```
 定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局队列的G
 
-### sysmon
+### Sysmon
 Go scheduler 会启动一个后台线程 sysmon，用来检测长时间（超过 10 ms）运行的 goroutine，将其调度到 global runqueues. 这是一个全局的 runqueue, 优先级比较低, 以示惩罚
 
 1. goroutine被抢占调度
@@ -184,6 +184,7 @@ sysmon每20us~10ms启动一次，按照《Go语言学习笔记》中的总结，
 
 可以看出，如果一个G任务运行10ms，sysmon就会认为其运行时间太久而发出抢占式调度的请求。一旦G的抢占标志位被设为true，那么待这个G下一次调用函数或方法时，runtime便可以将G抢占，并移出运行状态，放入P的local runq中，等待下一次被调度。
 
+### Spining Thread
 
  runtime最多会保留 GOMAXPROCS 个 spining thread
 
