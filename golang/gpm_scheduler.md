@@ -158,18 +158,19 @@ This helps to keep the M available to execute other Goroutines in the P’s LRQ 
 
 ### Work-stealing
 当一个 P 发现自己的 LRQ 已经没有 G 时，会从其他 P “偷” 一些 G 来运行, 这被称为 Work-stealing, Go 从 1.1 开始实现  
-* steal的策略:
+steal的策略:
 ```
-  runtime.schedule() {
-     // only 1/61 of the time, check the global runnable queue for a G.
-     // if not found, check the local queue.
-     // if not found,
-     //     try to steal from other Ps.
-     //     if not, check the global runnable queue.
-     //     if not found, poll network.
-  }
-  // 定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局队列的G
+runtime.schedule() {
+   // only 1/61 of the time, check the global runnable queue for a G.
+   // if not found, check the local queue.
+   // if not found,
+   //     try to steal from other Ps.
+   //     if not, check the global runnable queue.
+   //     if not found, poll network.
+}
 ```
+定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局队列的G
+
 
 
 
