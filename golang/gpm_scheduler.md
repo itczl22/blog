@@ -143,7 +143,7 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 
   * This will make the system call is going to block the M  
 
-One example of a system call that can’t be made asynchronously is file-based system calls. If you are using CGO, there may be other situations where calling C functions will block the M as well.
+  * One example is file-based system calls. If you are using CGO calling C functions will block the M as well.
 
 * Asynchronous System Calls
   * Go是通过异步的系统调用来处理高并发的网络io, 叫 network poller. 
