@@ -157,6 +157,8 @@ This helps to keep the M available to execute other Goroutines in the P’s LRQ 
 
 
 ### Work-stealing
+当一个 P 发现自己的 LRQ 已经没有 G 时，会从其他 P “偷” 一些 G 来运行, 这被称为 Work-stealing, Go 从 1.1 开始实现
+
 
 
 
