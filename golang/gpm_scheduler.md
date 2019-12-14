@@ -139,7 +139,8 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
 * Channle 阻塞
   * 当Goroutine因为Channel操作而阻塞(通过gopark)时, 对应的G会被放置到某个wait队列(如channel的waitq), 该G的状态由runing变为waitting, 而M会跳过该G尝试获取并执行下一个G
 
-当阻塞的G被G2唤醒(通过goready)时(比如channel可读/写)，G会尝试加入G2所在P的runnext，然后再是P Local队列和Global队列。
+  * 当阻塞的G被G2唤醒(通过goready)时(比如channel可读/写), G会尝试加入G2所在的P, 然后再是P Local队列和Global队列
+
 * Synchronous System Calls
   * This will make the system call is going to block the M  
 
