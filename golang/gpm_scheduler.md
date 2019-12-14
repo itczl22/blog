@@ -137,8 +137,6 @@ P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调�
   * 若 global runable queue 中也没有 goroutine, 随机选取选取一个 P, 从其挂载的 local runable queue 中 steal 走一半的 goroutine
 
 * Synchronous System Calls
-  * unblock 之后, 旧的 M 和 G 显然是缺少了一个 P, 所以他会向上边别的M从他这拿走P和queue一样, 看是否有机会能够从其他的 M 上 steal 到一个 P 和其挂载的 local runable queue. 如果这个 steal 的行为失败, 那么它将会把带着的 G 丢到 global runable queue 中, 此时M处于自旋状态[spining Thread], runtime最多会保留 GOMAXPROCS 个 spining thread
-
   * This will make the system call is going to block the M  
 
   * One example is file-based system calls. If you are using CGO which calls C functions will block the M as well
@@ -200,6 +198,7 @@ sysmon每20us~10ms启动一次，按照《Go语言学习笔记》中的总结，
 更关键地是，如果它们在网络输入操作、Sleep操作、Channel操作或 sync包的原语操作上阻塞了，也不会导致承载其多路复用的线程阻塞。如果一个goroutine在上述某个操作上阻塞，Go运行时会调度另外一 个goroutine。即使成千上万的Goroutine被创建了出来，如果它们阻塞在上述的某个操作上，也不会浪费系统资源。从操作系统的视角来看，你的程序的行为就像是一个事件驱动的C程序似的。
 
 
+ runtime最多会保留 GOMAXPROCS 个 spining thread
 
 
- scheduler ensures that there is at least one spinning M. This ensures that there are no runnable goroutines that can be otherwise running; and avoids excessive M blocking/unblocking.
+
