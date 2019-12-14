@@ -207,11 +207,11 @@ sysmon每20us~10ms启动一次，sysmon主要完成如下工作：
 * 收回因syscall长时间阻塞的P；
 * 我们看到sysmon将“向长时间运行的G任务发出抢占调度”，这个事情由retake实施：
 
-可以看出，如果一个G任务运行10ms，sysmon就会认为其运行时间太久而发出抢占式调度的请求。一旦G的抢占标志位被设为true，那么待这个G下一次调用函数或方法时，runtime便可以将G抢占，并移出运行状态，放入P的local runq中，等待下一次被调度。
+可以看出，如果一个G任务运行10ms，sysmon就会认为其运行时间太久而发出抢占式调度的请求。一旦G的抢占标志位被设为true，那么待这个G下一次调用函数或方法时，runtime便可以将G抢占，并移出运行状态，放入P的local runq中，等待下一次被调度
 
 ### Spining Thread
 
- runtime最多会保留 GOMAXPROCS 个 spining thread
+runtime最多会保留 GOMAXPROCS 个 spining thread
 
- scheduler ensures that there is at least one spinning M. This ensures that there are no runnable goroutines that can be otherwise running; and avoids excessive M blocking/unblocking.
+scheduler ensures that there is at least one spinning M. This ensures that there are no runnable goroutines that can be otherwise running; and avoids excessive M blocking/unblocking.
 
