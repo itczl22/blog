@@ -174,6 +174,7 @@ runtime.schedule() {
 定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局队列的G
 
 
+### Go调度器的查看方法
 $ GODEBUG=schedtrace=1000 ./test
 
 // 测试1输出结果
