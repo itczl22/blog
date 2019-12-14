@@ -198,8 +198,7 @@ SCHED 11067ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads
 
 
 ### Sysmon
-Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要：
-sysmon每20us~10ms启动一次，sysmon主要完成如下工作：
+Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要. sysmon每20us~10ms启动一次，sysmon主要完成如下工作：
 * 释放闲置超过5分钟的span物理内存；
 * 如果超过2分钟没有垃圾回收，强制执行；
 * 将长时间未处理的netpoll结果添加到任务队列；
