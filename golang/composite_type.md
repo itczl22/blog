@@ -1,6 +1,6 @@
-#### Both array and structs are fixed size. In contrast, slices and maps are dynamic data structures that grow as values are added.
+Both array and structs are fixed size. In contrast, slices and maps are dynamic data structures that grow as values are added.
 
-#### array
+### array
 
 ```
   var arr[6] int
@@ -20,7 +20,7 @@
 
 * r := [...]{99: 2}. define an array r with 100 elements, all zero except for the last which value is 2
 
-#### slice
+### slice
 * The type []T is a slice with elements of type T.  A slice does not store any data, it just describes a section of an underlying array. slice has three components: a pointer, a length, a capacity. The pointer points to the first element of the array that is reachable through the slice. 因为slice包含有指向array的指针，所以slice是引用类型，而array不是
 ```
   type SliceHeader struct {
@@ -95,7 +95,7 @@
     s = make([]int, 0 , 10) 如果作为参数传递必须使用指针，因为地址变了
 ```
 
-#### struct
+### struct
 
 * def
 ```
@@ -182,7 +182,7 @@ Go let us declare a field with a type but no name, such field named anonymous fi
   
     * 如果处于同一个层级的多个嵌入字段拥有同名的字段或方法, 那么从被嵌入类型的值那里, 选择此名称的时候就会引发一个编译错误, 因为编译器无法确定被选择的成员到底是哪一个
   
-#### map
+### map
 * def
 ```
   var m map[string]Vertex       // 不能使用，map必须要make
@@ -260,7 +260,7 @@ Go let us declare a field with a type but no name, such field named anonymous fi
   * 对于接口类型，具体的哈希算法，则由值的实际类型决定  
 
 
-#### json
+### json
 
 * JSON is an encoding of JavaScript values—strings,numbers,booleans,arrays and objects as unicode text.
 
