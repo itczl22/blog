@@ -147,9 +147,6 @@ godoc显示包的文档，godoc math显示标准库的math包文档，等价于g
 你在源码中不用理会vendor这个路径的存在，该怎么import包就怎么import，不要出现import "d/vendor/p"的情况。vendor是由go tool隐式处理的作为lib的包不携带vendor更佳
 
 #### 编码规范  
-
-* 注释必须是完整的一句话，以点号 . 结尾  
-
 * Doc comments  
 所有顶级，导出的名称都应具有doc注释，以及重要的非导出类型和函数声明
 

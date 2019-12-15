@@ -62,7 +62,7 @@
     * Go source file are always encode in UTF-8.  
     * Unicode escapes : \uhhhh for 16-bit value, \Uhhhhhhhh for a 32-bit value(less use)  
      A rune whose value is less than 256 may be written with a single hexadecimal escape,such as ‘\x41’ for ‘A' but for higher values a \u or \U must be used.  
-     ‘\xe4\xb8\x96’ is not a legal rune literal though these three bytes are a valid UTF-8 encoding of a single code point
+     "\xe4\xb8\x96" is not a legal rune literal though these three bytes are a valid UTF-8 encoding of a single code point, "世"
 
  6. range 作用于string时自动decode bytes to rune  
     r := []rune(str)     string(r)  
@@ -77,7 +77,7 @@
 
  2. 和变量的声明一样，可以指定类型，也可以不指定但是需要给初始值
 
- 3. const name type = value。’type' and '= value’ can be omitted but not both
+ 3. const name type = value。’type' can be omitted 
 
  4. The constant generator iota  
     A const declaration may use the constant  generator iota, which is used to create a sequence of related values without spelling out each one explicitly. constant often used to declare enums
@@ -97,18 +97,18 @@
 
 * 类型转换注意事项  
 
- * 对于整数类型值、整数常量之间的类型转换, 原则上只要源值在目标类型的可表示范围内就是合法的就行  
+  * 对于整数类型值、整数常量之间的类型转换, 原则上只要源值在目标类型的可表示范围内就是合法的就行  
 `var srcInt = int16(-255); dstInt := int8(srcInt)` 因为溢出，所以得到的dstInt是1
 
- * 虽然直接把一个整数值转换为一个string类型的值是可行的, 但被转换的整数值应该可以代表一个有效的 Unicode 代码点, 否则转换的结果将会是"?"（仅由高亮的问号组成的字符串值). 字符'?'的 Unicode 代码点是U+FFFD. 它是 Unicode 标准中定义的 Replacement Character, 专用于替换那些未知的、不被认可的以及无法展示的字符, 如`string(-1)`
+  * 虽然直接把一个整数值转换为一个string类型的值是可行的, 但被转换的整数值应该可以代表一个有效的 Unicode 代码点, 否则转换的结果将会是"?"（仅由高亮的问号组成的字符串值). 字符'?'的 Unicode 代码点是U+FFFD. 它是 Unicode 标准中定义的 Replacement Character, 专用于替换那些未知的、不被认可的以及无法展示的字符, 如`string(-1)`
 
- * 关于string类型与各种切片类型之间的互转
+  * 关于string类型与各种切片类型之间的互转
 
-   1. 一个值在从string类型向[]byte类型转换时代表着以 UTF-8 编码的字符串会被拆分成零散、独立的字节. 除了与 ASCII 编码兼容的那部分字符集外, 以 UTF-8 编码的某个单一字节是无法代表一个字符的.  
+    1. 一个值在从string类型向[]byte类型转换时代表着以 UTF-8 编码的字符串会被拆分成零散、独立的字节. 除了与 ASCII 编码兼容的那部分字符集外, 以 UTF-8 编码的某个单一字节是无法代表一个字符的.  
    `string([]byte{'\xe4', '\xbd', '\xa0', '\xe5', '\xa5', '\xbd'}) // 你好`.  
    比如, UTF-8 编码的三个字节 \xe4、\xbd和\xa0 合在一起才能代表字符'你', 而 \xe5、\xa5和\xbd 合在一起才能代表字符'好'.
 
-   2. 一个值在从string类型向[]rune类型转换时代表着字符串会被拆分成一个个 Unicode 字符.  
+    2. 一个值在从string类型向[]rune类型转换时代表着字符串会被拆分成一个个 Unicode 字符.  
    `string([]rune{'\u4F60', '\u597D'}) // 你好`
 
 #### 类型断言表达式
@@ -141,9 +141,9 @@
 * 变量的声明
 ```
   var name type = expression // type 和 = expression可以省略, 但是不能同时省略
-  name := "test"             // 短变量声明, 只用于局部变量的声明
+  name := "test"             // 短变量声明, 只用于局部变量的声明, 切 := 左侧必须有一个新的变量
 
-  := is a type of short variable declaration , declares one or more variables and gives them appropriate types based on the initializer   values.
+  := is a type of short variable declaration , declares one or more variables and gives them appropriate types based on the initializer values.
   := is used only within a function, not for package-level variables.
 ```
 
@@ -151,7 +151,7 @@
 只针对短变量声明
 ```
   var err error
-  n, err := io.WriteString(os.Stdout, "Hello, World!\n") // 这里对`err`进行了重声明
+  n, err := io.WriteString(os.Stdout, "Hello, World!\n") // 这里对`err`进行了重声明, 上边的err被回收了
 ```
 
 * 变量赋值  
@@ -180,7 +180,8 @@ x, y = y, x；先评估右侧的值，再赋值给左侧
 ％15.12s       占15个位, 最多输出12个字符
 %.12s          最多输出12个字符, 多余的扔掉
 %*s            就是“%15s”的扩展, 占不确定的位宽即*, fmt.Printf(“%*s\n”, depth*2, “iii”)输出iii占depth*2位宽
-%q             "string"、'r' of rune    
+%q             "string"、'r' of rune   
+%p	       地址 
 %v             any value of natural format
 %+v            输出结构体时会加上字段名, 如{Name:name Order:order}而％v是{name order}
 %#v            以go语法的结果输出对象
@@ -244,12 +245,12 @@ x, y = y, x；先评估右侧的值，再赋值给左侧
 
 * 变量只声明未给初始值，那么默认使用该类型的0值初始化，var s string 那么s == “"
 
-* go只要后++和后--，没有前++和前--，i++是语句不是表达式，因此 s := i++是错的，只能是i++
+* go只有后++和后--，没有前++和前--，i++是语句不是表达式，因此 s := i++是错的，只能是i++
 
 * s += sep，+= statement makes a new string, old contents of s are no longer in use ,so they will be garbage-collected in due course
 
 * A map is reference to the data structure created by make, map的key是无序的，之所以这么设计师为了避免程序依赖这种特定的顺序
 
-* It`s not a problem if the map doesn`t yet contain that key ，取对应类型的zero value
+* It\`s not a problem if the map doesn`t yet contain that key ，取对应类型的zero value
 
 * the value of a constant must be a number, string or boolean
