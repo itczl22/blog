@@ -174,7 +174,7 @@ runtime.schedule() {
 定时窃取global runnable queue 可以避免local runnable queue 一直有G而无法运行全局队列的G
 
 ### Sysmon
-Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要. sysmon每20us~10ms启动一次，sysmon主要完成如下工作：
+Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控线程)，该m无需绑定p即可运行，该m在整个Go程序的运行过程中至关重要. sysmon每20us~10ms启动一次, 每次休眠时间倍增, 最终每一轮都会休眠10ms. sysmon主要完成如下工作：
 * 释放闲置超过5分钟的span物理内存；
 
 * 如果超过2分钟没有垃圾回收，强制执行；
