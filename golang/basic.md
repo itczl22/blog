@@ -12,7 +12,7 @@
 在Go 1.9中, 内部其实使用了类型别名的特性. 比如内建的byte类型，其实是uint8的类型别名，而rune其实是int32的类型别名  
 ```
   type byte = uint8
-  type rune = int32
+  type rune = int32 
 ```
 
 * 类型别名主要作用  
@@ -85,9 +85,6 @@
  5. untyped constants  
     many constant are not committed to a particular type  
     就是说一个常量你不知道他的类型，比如：22，到底是int32还是int64，你不知道，所以叫untyped
-
-
-
 
 ####  类型转换
 
