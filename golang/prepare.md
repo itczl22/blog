@@ -188,16 +188,16 @@ often a one or two letter abbreviation of its type suffices (such as "c" or "cl"
 
 * param type  
   * value  
-A value param can reduce the amount of garbage that can be generated.   
-param is a map, func or chan.  
-param is a slice and the method doesn't reslice or reallocate the slice.  
-如果需要改变她的cap就用pointer(s \*[]int)传递，比如你要在另一个函数里边不断append, slice本身是引用传递，即通过被调函数改了调用函数跟着变化，但是reslice会彻底改变他的地址的！！注意区别
+    A value param can reduce the amount of garbage that can be generated.   
+    param is a map, func or chan.  
+    param is a slice and the method doesn't reslice or reallocate the slice.  
+    如果需要改变她的cap就用pointer(s \*[]int)传递，比如你要在另一个函数里边不断append, slice本身是引用传递，即通过被调函数改了调用函数跟着变化，但是reslice会彻底改变他的地址的！！注意区别
 
   * pointer  
-Method needs to mutate the param.  
-param is a large struct or array.  
-param is a struct that contains a sync.Mutex or similar synchronizing field.  
-when in doubt, use a pointer receiver.  
+    Method needs to mutate the param.  
+    param is a large struct or array.  
+    param is a struct that contains a sync.Mutex or similar synchronizing field.  
+    when in doubt, use a pointer receiver.  
 
 * Variable name  
   * Short rather than long
@@ -213,5 +213,3 @@ when in doubt, use a pointer receiver.
   * 3个以上的函数接口名类似于结构体名，如：Car.
   
   
-* 注释示例
-![注释示例](./pic/comment_demo.png)
