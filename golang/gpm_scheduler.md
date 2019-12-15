@@ -195,6 +195,14 @@ runtime最多会保留 GOMAXPROCS 个 spining thread
 
 scheduler ensures that there is at least one spinning M. This ensures that there are no runnable goroutines that can be otherwise running; and avoids excessive M blocking/unblocking.
 
+当一个 M 具有以下几个特点中的一个的时候，它就可以被称作是一个「Spining Thread」：
+
+1. An M with a P assignment is looking for a runnable goroutine.
+2. An M without a P assignment is looking for available Ps.
+3. Scheduler also unparks an additional thread and spins it when it is readying a goroutine if there is an idle P and there are no other spinning threads.
+
+
+
 ### Go调度器的查看方法
 ```
 $ GODEBUG=schedtrace=1000 ./comment_interface
