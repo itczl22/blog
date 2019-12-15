@@ -189,19 +189,6 @@ Go程序启动时，runtime会去启动一个名为sysmon的m(一般称为监控
 
 可以看出，如果一个G任务运行10ms，sysmon就会认为其运行时间太久而发出抢占式调度的请求。一旦G的抢占标志位被设为true，那么待这个G下一次调用函数或方法时，runtime便可以将G抢占，并移出运行状态，放入P的local runq中，等待下一次被调度
 
-### Spining Thread
-
-runtime最多会保留 GOMAXPROCS 个 spining thread
-
-scheduler ensures that there is at least one spinning M. This ensures that there are no runnable goroutines that can be otherwise running; and avoids excessive M blocking/unblocking.
-
-当一个 M 具有以下几个特点中的一个的时候，它就可以被称作是一个「Spining Thread」：
-
-1. An M with a P assignment is looking for a runnable goroutine.
-2. An M without a P assignment is looking for available Ps.
-3. Scheduler also unparks an additional thread and spins it when it is readying a goroutine if there is an idle P and there are no other spinning threads.
-
-
 
 ### Go调度器的查看方法
 ```
