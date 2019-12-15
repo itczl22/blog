@@ -186,17 +186,17 @@ constant like MixedCaps(exported) or mixedCaps(unexported)
 * Receiver name  
 often a one or two letter abbreviation of its type suffices (such as "c" or "cl" for "Client").  Don't use generic names such as "me", "this" or "self". If you call the receiver "c" in one method, don't call it "cl" in another. 
 
-* Receiver type  
+* param type  
   * value  
-A value receiver can reduce the amount of garbage that can be generated.   
-Receiver is a map, func or chan.  
-Receiver is a slice and the method doesn't reslice or reallocate the slice.  
+A value param can reduce the amount of garbage that can be generated.   
+param is a map, func or chan.  
+param is a slice and the method doesn't reslice or reallocate the slice.  
 如果需要改变她的cap就用pointer(s \*[]int)传递，比如你要在另一个函数里边不断append, slice本身是引用传递，即通过被调函数改了调用函数跟着变化，但是reslice会彻底改变他的地址的！！注意区别
 
   * pointer  
-Method needs to mutate the receiver.  
-Receiver is a large struct or array.  
-Receiver is a struct that contains a sync.Mutex or similar synchronizing field.  
+Method needs to mutate the param.  
+param is a large struct or array.  
+param is a struct that contains a sync.Mutex or similar synchronizing field.  
 when in doubt, use a pointer receiver.  
 
 * Variable name  
