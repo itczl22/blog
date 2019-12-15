@@ -1,9 +1,9 @@
 #### 安装过程
 
-* 下载  
+* 下载
 wget https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz  --no-check-certificate   下载的是二进制包，所以不用安装
 
-* 解压  
+* 解压
 tar zxvf go1.6.2.linux-amd64.tar.gz
 
 * 配置  
