@@ -119,6 +119,8 @@ $ go tool pprof -png cpu.pprof
   
 ![可视化样本分析](./pic/cpu.svg)
 
+* 从 go1.11 go tool pprof 集成了火焰图, 所以 uber 的 go-torch 不再需要, 官方库已经被archive
+
 #### 需要安装的软件
 * graphviz
 Graph Visualization Software 是一个由AT&amp;T实验室启动的开源工具包, 用于绘制DOT语言脚本描述的图形.  Graphviz由 DOT语言的图形描述语言与一组可以生成和/或处理DOT文件的工具组成  
