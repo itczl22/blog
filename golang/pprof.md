@@ -91,13 +91,14 @@ the number of samples in which the function appeared (either running or waiting 
 #### 可视化样本分析
 * 需要安装 graphviz
 
-* 方法一 >本机：
-$ go tool pprof  http://10.233.145.x3:8098/debug/pprof/profile
+* 方法一 >本机：  
+$ go tool pprof  http://10.233.145.x3:8098/debug/pprof/profile  
 $ png >cpu.png
 
-* 方法二 >远程：
-$ wget -O cpu.pprof "http://10.248.x3.173:8090/debug/pprof/profile
-$ go tool pprof -png cpu.pprof
+* 方法二 >远程：  
+$ wget -O cpu.pprof "http://10.248.x3.173:8090/debug/pprof/profile  
+$ go tool pprof -png cpu.pprof  
+
 ![可视化样本分析](./pic/graphviz.png)
 
 * 箭头表示调用方向
