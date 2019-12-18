@@ -1,22 +1,22 @@
 在计算机性能调试领域里, profiling 就是对应用的画像, 这里画像就是应用使用 CPU 和内存等的情况. 也就是说应用使用了多少 CPU 资源、都是哪些部分在使用?每个函数使用的比例是多少、有哪些函数在等待 CPU 资源等. 知道了这些, 我们就能对应用进行规划, 也能快速定位性能瓶颈.   
 
 在 go 语言中, 主要关注的应用运行情况主要包括以下几种
-* CPU profile
+* CPU profile  
 程序的 CPU 使用情况, 按照一定频率去采集应用程序在 CPU 和寄存器上面的数据  
 
-* Memory Profile(Heap Profile)
+* Memory Profile(Heap Profile)  
 程序的内存使用情况  
 
-* Block Profiling
+* Block Profiling  
 goroutines 不在运行状态的情况, 可以用来分析和查找死锁等性能瓶颈   
 
-* Trace Profiling：   
+* Trace Profiling  
 报告程序的调用路径  
 
-* Mutex Profiling
+* Mutex Profiling  
 报告程序竞争锁的持有情况   
 
-* ThreadCreate Profiling
+* ThreadCreate Profiling  
 stack traces that led to the creation of new OS threads   
 
 __profiling的收集方式__
@@ -71,7 +71,7 @@ get an interactive web interface at the specified host:port that can be used to 
 根据已经生成的profile文件进行分析  
 go tool pprof cpu.profile
 
-__终端样本分析__
+#### 终端样本分析
 * go tool pprof http://10.233.x5.153:8098/debug/pprof/profile
 ![终端样本分析](./pic/terminal.png)
 
@@ -88,7 +88,7 @@ number of samples in which the function was running (as opposed to waiting for a
 the number of samples in which the function appeared (either running or waiting for a called function to return)
 * cum% 表示函数出现时间占总采样时间的百分比
 
-__可视化样本分析__
+#### 可视化样本分析
 * 需要安装 graphviz
 
 * 方法一 >本机：
@@ -105,7 +105,7 @@ $ go tool pprof -png cpu.pprof
 * 方框表示函数实体
 * 0.09s(0.14%) of 46.89s(72.41%) 表示当前函数的真实运行时间是0.09s, 占总采样时间的0.14%. 46.89s表示函数出现的时间, 72.41%表示函数出现的时间占总采样时间的百分比
 
-__火焰图__
+#### 火焰图
 * 需要安装 FlameGraph
 
 * 生成方式
@@ -115,16 +115,17 @@ __火焰图__
   * Fold stacks-折叠堆栈: stackcollapse-go.pl   cpu.pprof > cpu.folded
 
   * flamegraph.pl-生成svg: flamegraph.pl  go_cpu.folded > cpu.svg   
+  
 ![可视化样本分析](./pic/cpu.svg)
 
-__需要安装的软件__
+#### 需要安装的软件
 * graphviz
-Graph Visualization Software 是一个由AT&amp;T实验室启动的开源工具包, 用于绘制DOT语言脚本描述的图形.  Graphviz由 DOT语言的图形描述语言与一组可以生成和/或处理DOT文件的工具组成      
+Graph Visualization Software 是一个由AT&amp;T实验室启动的开源工具包, 用于绘制DOT语言脚本描述的图形.  Graphviz由 DOT语言的图形描述语言与一组可以生成和/或处理DOT文件的工具组成  
 下载：https://graphviz.gitlab.io/\_pages/Download/Download_source.html   
 
-* FlameGraph        
-将flamegraph.pl移到PATH下, 这个文件主要是将捕获的信息渲染成svg格式用的, 而且支持自定义宽高字体颜色等属性, 这个主要是生成火焰图使用     
+* FlameGraph
+将flamegraph.pl移到PATH下, 这个文件主要是将捕获的信息渲染成svg格式用的, 而且支持自定义宽高字体颜色等属性, 这个主要是生成火焰图使用  
 下载：https://github.com/brendangregg/FlameGraph
 
-__参考文章__
+#### 参考文章
 https://blog.golang.org/profiling-go-programs
