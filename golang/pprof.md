@@ -115,7 +115,7 @@ __火焰图__
   * Fold stacks-折叠堆栈: stackcollapse-go.pl   cpu.pprof > cpu.folded
 
   * flamegraph.pl-生成svg: flamegraph.pl  go_cpu.folded > cpu.svg   
-![可视化样本分析](./pic/flamegraph.png)
+![可视化样本分析](./pic/cpu.svg)
 
 __需要安装的软件__
 * graphviz
