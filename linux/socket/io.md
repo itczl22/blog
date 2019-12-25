@@ -51,6 +51,8 @@
 - 如果处理的连接数不是很高的话，使用 IO multiplexing 的web server 不一定比使用multi-threading + blocking IO 的 web server 性能更好，可能延迟还更大
 - select/epoll的优势并不是对于单个连接能处理得更快，而是在于能处理更多的连接
 
+- io多路复用一般对每个socket都设置为non-blocking, 因为正常是有数据才会read, 所以没必要阻塞, 万一没读到数据也不会阻塞整个进程
+
 **信号驱动 I/O: signal driven IO**
 - 也是一种io multiplexing，典型代表就是poll，因为select有FD_SETSIZE的限制，所有poll比select用的多，但是目前都用epoll
 
