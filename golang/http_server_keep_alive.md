@@ -30,11 +30,11 @@ func (srv *Server) Serve(l net.Listener) error {
 		// 循环接收连接    
 		rw, e := l.Accept()
 
-		// ...
+		// 新建一个连接 
 		c := srv.newConn(rw)
 		c.setState(c.rwc, StateNew) // before Serve can return
 
-		// 每个连接新起一个协程处理【是针对tcp连接、不是针对http请求】
+		// 每个连接新起一个协程处理
 		go c.serve(ctx)
 	}
 }
@@ -81,7 +81,7 @@ func (c *conn) serve(ctx context.Context) {
 				return
 			}
 		}
-		// 设置读超时时间 , 所以这两个       
+		// 重置读超时时间
 		c.rwc.SetReadDeadline(time.Time{})
 	}
 }
