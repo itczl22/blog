@@ -94,7 +94,7 @@
   - 有最大文件描述符的限制，Linux为1024.
   - 每次都需要无差别轮询文件描述符集合fdset，随着连接的增加，性能也在直线下降. O(n)级，n为连接数
 - 程序示例
-  - [select demo](/socket/select.c "select demo")
+  - [select demo](/linux/socket/select.c "select demo")
 
 **poll**
 
@@ -125,7 +125,7 @@
 - 弊端
   - 和select一样，也需要轮询pollfd数组来获取就绪的描述符，随着连接增加性能线性下降
 - 程序示例
-  - [poll demo](/socket/poll.c "poll demo")
+  - [poll demo](/linux/socket/poll.c "poll demo")
 
 **epoll**
 
@@ -174,7 +174,7 @@
       ET(edge-triggered)是高速工作方式，只支持non-blocking socket. 在这种模式下，当描述符从未就绪变为就绪时，内核通过epoll告诉你  
       然后它会假设你知道文件描述符已经就绪，并且不会再为那个文件描述符发送更多的就绪通知(only once)，直到你做了某些操作导致那个文件描述符不再为就绪状态  
 - 程序示例
-  - [epoll_et demo](/socket/epoll_et.c "epoll_et demo")
-  - [epoll_lt demo](/socket/epoll_lt.c "epoll_lt demo")
+  - [epoll_et demo](/linux/socket/epoll_et.c "epoll_et demo")
+  - [epoll_lt demo](/linux/socket/epoll_lt.c "epoll_lt demo")
 
 
