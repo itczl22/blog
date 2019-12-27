@@ -1,14 +1,14 @@
 webserver[ 比如Nginx、Apache、lighttpd ]不支持对外部程序的直接调用或者解析, 所有的外部程序必须通过服务器支持的协议[ 比如http(golang)、fastcgi(php)、wsgi(python) ]来通信. Nginx通过反向代理将请求发给对应的监听端口  
 
-每个语言都有对应的和webserver通信的方式, 比如php一般通过fastcgi协议对应实现是php-fpm, Python采用wsgi协议对应的实现是uwsgi, go一般用http协议即直接由nginx proxy_pass过来
+每个语言都有对应的和webserver通信的方式, 比如php一般通过fastcgi协议对应实现是php-fpm, Python采用wsgi协议对应的实现是uwsgi, go一般用http协议即直接由nginx proxy_pass反向代理
 
 但是像lua这样的语言是通过nginx模块集成, 直接作为webserver的一部分来运行, 即openresty, 所以他提供的并发会更高, 因为他不需要通过中间协议来协调webserver和application之间的通信  
 
 本文只讨论fastcgi协议
 
-FastCGI接口在Linux下是socket(这个socket可以是文件socket, 也可以是ip socket), 在每个语言中都有对应的实现
+FastCGI接口在Linux下是socket(这个socket可以是unix socket, 也可以是tcp socket), 在每个语言中都有对应的实现
 
-比如golang中, 有net/http/cgi 和 net/http/fcgi两个包来实现  
+比如golang中, 有 net/http/cgi 和 net/http/fcgi 两个包来实现  
 * nginx.conf
 ```
   server {
@@ -115,7 +115,7 @@ curl -H "Host:gocgi.com" "http://17.17.17.17/gocgi"
 
 * 交给php解释器处理很好, 但是php解释器如何与webserver进行通信呢? 为了解决不同的语言解释器(如php、python解释器)与webserver的通信, 于是出现了cgi协议. 只要你按照cgi协议去编写程序, 就能实现语言解释器与webwerver的通信. 如php-cgi程序
 
-* 但是webserver每收到一个请求, 都会去fork一个cgi进程, 请求结束再kill掉这个进程. 这样有10000个请求就需要fork、kill php-cgi进程10000次, 所以无法管理cgi进程
+* 对于传统的cig, 来一个请求都会去fork一个进程, 请求结束再kill掉这个进程. 这样有10000个请求就需要fork、kill 进程10000次, 所以无法管理进程
 
 传统CGI接口方式的主要缺点是性能很差, 因为每次HTTP服务器遇到动态程序时都需要重新启动脚本解析器来执行解析, 然后将结果返回给HTTP服务器. 这在处理高并发访问时几乎是不可用的, 另外传统的CGI接口方式安全性也很差, 现在已经很少使用了
 
@@ -135,7 +135,7 @@ FastCGI接口方式采用C/S结构, 可以将HTTP服务器和脚本解析服务�
 
 * 是FastCGI 的实现, 并提供了进程管理的功能. 进程包含 master 进程和 worker 进程
 
-* master 进程只有一个, 负责监听端口接收来自 http Server 的请求, 而 worker 进程则一般有多个(具体数量根据实际需要配置php-fpm.conf中的 max_children), 每个进程内部都嵌入了一个 PHP 解释器, 是 PHP 代码真正执行的地方.
+* master进程负责创建和管理woker进程, 同时负责监听端口, master进程是多路复用的. woker进程负责accept请求连接, 同时处理请求, 一个woker进程可以处理多个请求但是一次只能处理一个请求. 每个worker进程内部都嵌入了一个 PHP 解释器, 是 PHP 代码真正执行的地方
 
 #### nginx 如何结合 php-fpm运行
 
@@ -149,7 +149,7 @@ FastCGI接口方式采用C/S结构, 可以将HTTP服务器和脚本解析服务�
   }
 ```
 
-* php-fpm master进程监听指定的端口等待请求到来交给work去处理
+* php-fpm master进程监听指定的端口
 ```
   # php-fpm.conf
   listen = 127.0.0.1:9000
@@ -211,10 +211,10 @@ FastCGI接口方式采用C/S结构, 可以将HTTP服务器和脚本解析服务�
   
 * pm.max_children = 256  
   * php-fpm创建的worker进程数, 也是同时能处理的最大请求数
-  * 假设max_children设置的较小, 比如5-10个, 那么php-cgi就会"很累", 处理速度也很慢, 等待的时间也较长
+  * 假设max_children设置的较小, 比如5-10个, 那么php-cgi就会"很累", 处理速度也很慢, 等待的时间也较长, 因为一个php-fpm同时只能处理一个请求
   * 如果长时间没有得到处理的请求就会出现504 Gateway Time-out这个错误, 而正在处理的很累的那几个php-cgi如果遇到了问题就会出现502 Bad gateway这个错误
-  * 正常情况下每一个php-cgi所耗费的内存在20M左右, 256*20M = 5.12G
-  * 502 Bad Gateway: The server was acting as a gateway or proxy and received an invalid response from the upstream server
+  * 但是也不能设置的太大, 正常情况下每一个php-cgi所耗费的内存在20M左右, 256*20M = 5.12G. 除了内存, 进程多了cpu会不停的进行进程间的切换, 也会导致机器负载增加
+  * 502 Bad Gateway: The server was acting as a gateway or proxy and received an invalid response from the upstream server
   * 504 Gateway Time-out: The server was acting as a gateway or proxy and did not receive a timely response from the upstream server
 ```
 ; The number of child processes to be created when pm is set to 'static' and the 
@@ -229,7 +229,7 @@ FastCGI接口方式采用C/S结构, 可以将HTTP服务器和脚本解析服务�
 ;pm.max_children = 5
 ```
   
-* pm.max_requests = 10000
+* pm.max_requests = 10240
   * 最大处理请求数是指一个php-fpm的worker进程在处理多少个请求后就终止掉, master进程会重新respawn一个新的
   * 这个配置的主要目的是避免php解释器或程序引用的第三方库造成的内存泄露
   * 502是后端 PHP-FPM 不可用造成的, 间歇性的502一般认为是由于 PHP-FPM 进程重启造成的
@@ -271,13 +271,22 @@ FastCGI接口方式采用C/S结构, 可以将HTTP服务器和脚本解析服务�
 ;pm.process_idle_timeout = 10s;
 ```
 
+* request_terminate_timeout = 2
+  * 请求最大耗时时间, 避免单个请求长时间占用worker. 
+  * 超时设置不合理也可能导致服务雪崩, 比如服务出了问题部分一直不返回, 那么master就会终止该worker然后重启一个worker, 如此循环导致整个服务在不停的起进程杀进程
+```
+; The timeout for serving a single request after which the worker process will
+; be killed. This option should be used when the 'max_execution_time' ini option
+; does not stop script execution for some reason. A value of '0' means 'off'.
+```
+
 #### Nginx和PHP-FPM的通信方式
 
-Nginx和PHP-FPM的进程间通信有两种方式, 一种是TCP, 一种是UNIX Domain Socket
+Nginx和PHP-FPM的进程间通信有两种方式, 一种是TCP/IP socket, 一种是UNIX Domain Socket
 
-* tcp 
-IP加端口，可以跨服务器
-则需要走到IP层, 对于非同一台服务器上, TCP Socket走的就更多了.
+* tcp/ip
+IP加端口，可以跨服务器  
+需要走网络协议栈
 ```
   php-fpm.conf:  listen = 127.0.0.1:9000
   nginx.conf:    fastcgi_pass 127.0.0.1:9000;
