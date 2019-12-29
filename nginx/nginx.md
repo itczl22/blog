@@ -13,12 +13,12 @@
     - 旧版本的Nginx的模块是静态的, 添加和删除模块都要对Nginx进行重新编译, 1.9.11以及更新的版本已经支持动态模块加载.
 
 ## Nginx的内部结构
-- Nginx执行流程
+
+- Nginx的进程模型    
+  ![Nginx的进程模型](./nginx-process-model.png "nginx的进程模型")
     - nginx在启动后, 在unix系统中会以daemon的方式在后台运行, 后台进程包含一个master进程和多个worker进程. 
     - master进程主要用来管理worker进程, 包含: 接收来自外界的信号, 向各worker进程发送信号, 监控worker进程的运行状态, 当worker进程退出后(异常情况下), 会自动重新启动新的worker进程. 
     - worker进程主要处理基本的网络事件, 多个worker进程之间是对等的, 他们同等竞争来自客户端的请求, 各进程互相之间是独立的. 一个请求只可能在一个worker进程中处理, 一个worker进程不可能处理其它进程的请求, 为了保证这一点在注册事件时必须互斥(accept_mux). worker进程的个数是可以设置的, 一般我们会设置与机器cpu核数一致, 这样可以充分利用多核cpu且减少进程之间的切换. 一个worker处理多个请求, 多个请求在worker内通过epoll机制进行切换而不需要进入内核态
-- Nginx的进程模型    
-  ![Nginx的进程模型](./nginx-process-model.png "nginx的进程模型")
 - http请求的处理流程  
   ![http请求的处理流程](./nginx-http.png "http请求的处理流程")
 
