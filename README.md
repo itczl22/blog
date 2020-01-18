@@ -10,9 +10,9 @@
 
 - [大数据处理](./bigdata/README.md)
 
-- [网络知识](./http/README.md)
+- [Network](./http/README.md)
 
 - 工具
-  - [Git基础知识及应用](./git/git.md)
-  - [常用shell命令](./tools/shell.md)
-  - [Nginx基础知识及应用](./nginx/nginx.md)
+  - [Git](./git/git.md)
+  - [Shell](./tools/shell.md)
+  - [Nginx](./nginx/nginx.md)
