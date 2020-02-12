@@ -10,13 +10,13 @@ __redis高可用集群的基础__
 * 集群(cluster) 通过集群, redis解决了写操作无法负载均衡, 以及 存储能力受到单机限制的问题, 实现了较为完善的高可用方案
 
 __目前实现redis高可用集群的方式主要有3种__
-* twemproxy 
+* twemproxy  
 https://github.com/twitter/twemproxy
 
-* codis
+* codis  
 https://github.com/CodisLabs/codis
 
-* redis cluster
+* redis cluster  
 https://redis.io/topics/cluster-tutorial
 
 __3种实现方式的对比__ 
