@@ -18,4 +18,4 @@
 
 - [对比http1.0、http1.1、http2.0、http3.0](./diff_http_1.0_1.1_2.0_3.0.md)
 
-- [跨域](./corss_domain.md)
+- [跨域](./cross_domain.md)
