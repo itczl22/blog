@@ -29,8 +29,8 @@ HTTP/2 仍是对之前 HTTP 标准的扩展，而非替代。 HTTP 的应用语�
 
 ![二进制分帧示意图](./pic/http2_binary_frame.png)
 
-* 帧的类型
-![帧的类型](./pic/http2_frame_type.png)
+* 帧的类型  
+![帧的类型](./pic/http2_frame_type.png)  
 [参考](https://tools.ietf.org/html/rfc7540#section-6)
 
 * 帧的格式
