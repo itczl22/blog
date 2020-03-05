@@ -12,6 +12,10 @@
 
 - [Network](./network/README.md)
 
+- [Mysql](./mysql/README.md)
+
+- [GRPC](./grpc/README.md)
+
 - 工具
   - [Git](./git/git.md)
   - [Shell](./tools/shell.md)
