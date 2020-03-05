@@ -56,7 +56,7 @@ Each HTTP request over the TCP connection may be made immediately without waitin
 
 * [参考](https://stackoverflow.com/questions/36517829/what-does-multiplexing-mean-in-http-2)
 
-* HTTP1.1 Without Pipelining vs HTTP1.1 Pipelining
+* HTTP1.1 Without Pipelining vs HTTP1.1 Pipelining  
 ![HTTP1.1 without pipelining vs pipelining](./pic/http1.1_nopipeling_vs_pipelining.png)
 
 * HTTP1.1 pipelinling vs HTTP2 Multiplexing
