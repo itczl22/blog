@@ -6,10 +6,10 @@ __HTTPS通信三步走__
 
 * 最后进行对称加密通信
 
-__TLS握手示意图__
+__TLS握手示意图__  
 ![TLS握手示意图](./pic/tls_shakehand.png)
 
-__https抓包示意图__
+__https抓包示意图__  
 ![HTTPS通信抓包示意图](./pic/https_communication_wireshark.png)
 
 __主要流程__
