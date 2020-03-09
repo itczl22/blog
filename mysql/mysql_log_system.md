@@ -1,4 +1,4 @@
-Mysql 的日志主要分为6种
+Mysql 的日志主要分为7种
 
 * 错误日志(Error Log)
 Mysqld 启动、运行、停止所遇到的问题
@@ -10,8 +10,11 @@ Mysqld 启动、运行、停止所遇到的问题
 执行时间超过 long_query_time 的查询记录
 
 * 二进制日志(Binary Log)
-所有修改数据的记录
+所有修改数据的记录，同时也用于主从复制
 
 * 事务日志(Transaction Log)
 
-* 中继日志
+* 中继日志(Relay Log)
+
+* DDL 日志
+
