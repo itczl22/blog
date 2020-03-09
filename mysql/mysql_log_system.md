@@ -10,7 +10,7 @@ Mysqld 启动、运行、停止所遇到的问题
 执行时间超过 long_query_time 的查询记录
 
 * 二进制日志(Binary Log)
-所有修改数据的记录，同时也用于主从复制
+就是常说的binlog，记录所有修改数据的记录，同时也用于主从复制
 
 * DDL 日志
 远数据(metadata)， 比如表的创建、表结构的修改等
@@ -28,4 +28,5 @@ __Redo Log__
 
 __Undo Log__
 
-__bin
+__Binary Log__
+
