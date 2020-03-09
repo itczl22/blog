@@ -21,4 +21,11 @@ Mysqld 启动、运行、停止所遇到的问题
 * 事务日志(Transaction Log)
 主要和mysql事务相关的，包括 redo log 和 undo log
 
-__
+其中事务日志的redo log 和 undo log 属于存储引擎层的日志，中继日志是一个中间层，其他的都是server层的日志
+
+__Redo Log__
+
+
+__Undo Log__
+
+__bin
