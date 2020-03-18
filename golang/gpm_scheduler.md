@@ -25,7 +25,7 @@ __用户线程__
 
 * 我们平时说的多线程、轻量级进程、协程、goroutine其实都属于用户线程, 因为他都属于用户态的
 
-* 由于c/c++/java都是1:1的模型, 是一种轻量级进程, 所以我们一般称为多线程; lua是N:1模型、golang是N:M的模型, 我们新起了一个名字叫协程
+* 由于c/c++/java都是1:1的模型, 是一种轻量级进程, 所以我们一般称为多线程; lua是N:1模型(OpenResty是N:M)、golang是N:M的模型, 我们新起了一个名字叫协程
 
 __线程__
 * 这里的线程特指轻量级进程 LWP - Light Weight Process, 其实就是平时说的多线程的那个线程
@@ -38,16 +38,12 @@ __线程__
 
 * 优点是在多处理器系统中, 内核能够同时调度同一进程中多个线程并行执行到多个处理器中; 如果进程中的一个线程被阻塞, 内核可以调度同一个进程中的另一个线程
 
-* 缺点是即使CPU在同一个进程的多个线程之间切换, 也需要陷入内核, 因此其速度和效率不如用户级线程
+* 缺点是即使CPU在同一个进程的多个线程之间切换, 也需要陷入内核
 
 __协程__
 * coroutine, 也就是轻量级的线程
 
 * 用户线程 -> 调度器 -> 内核线程 -> CPU
-
-* lua, N:1模型
-
-* goroutine 只不过是N:M的模型
 
 * 用户级线程内核的切换由用户态程序自己控制(通过系统调用来获得内核提供的服务), 不需要内核干涉, 少了进出内核态的消耗
 
@@ -62,7 +58,7 @@ __用户线程 和 内核线程 的关系 及映射模型__
 
   * 这种用户线程就是轻量级进程(LWP-light weight process)
 
-  * pthread, java sun开发的sdk 都是这种
+  * pthread, java sun开发的sdk 都是这种线程
 
 * N:1 模型  
   * 多对一的模型将多个用户线程映射到一个内核线程. 多对一模型线程的切换速度要快很多, 他不需要内核态的切换(线程之间的切换由用户代码来执行). 这种模型中, 进程中的某个线程被阻塞, 比如io等待, 那么整个进程都会被阻塞.  
@@ -83,7 +79,7 @@ __用户线程 和 内核线程 的关系 及映射模型__
   * goroutine就是这种模型, 他通过 P 把 N:1 映射为 N:M  
 
 
-### Goroutine 和 OS Thread
+### Goroutine 和 Kernel Thread
 
 调度
 * 内核线程是有操作系统调度的, 在内核线程为cpu核数时, 执行效率最高, 因为所有的线程都在运行, 而且不需要切换. 当然了这种理想情况显然是不存在的
@@ -93,19 +89,19 @@ __用户线程 和 内核线程 的关系 及映射模型__
 内存开销  
 * 创建一个 goroutine 的栈内存消耗为 2 KB, 实际运行过程中, 如果栈空间不够用会自动进行扩容  
 
-* 创建一个 os thread 则需要消耗 1 MB 栈内存, 而且还需要一个被称为 “a guard page” 的区域用于和其他 thread 的栈空间进行隔离
+* 创建一个 kernel thread 则需要消耗 1 MB 栈内存, 而且还需要一个被称为 “a guard page” 的区域用于和其他 thread 的栈空间进行隔离
 
 创建和销毁  
 * goroutine 用户级的, 因为是由 Go runtime 负责管理的，创建和销毁的消耗非常小
 
-* os thread 内核级的, 创建和销毀都会有巨大的消耗, 因为要和操作系统打交道, 通常解决的办法就是线程池  
+* kernel thread 内核级的, 创建和销毀都会有巨大的消耗, 因为要和操作系统打交道, 通常解决的办法就是线程池  
 
 切换  
 * 每次一个线程发生切换, 都需要保存/恢复所有寄存器, 包括16个通用寄存器、PC(程序计数器）、SP（栈指针）、段寄存器(segment register)、BP(base point)、16个XMM寄存器、FP协处理器状态、X AVX寄存器以及所有MSR等  
 
 * 而goroutine切换时, 只需要保存/恢复三个寄存器，分别是PC、SP和BP  
 
-* go调度器和任何现代操作系统的调度器都是O(1)复杂度的, 这意味着增加线程/goroutines的数量不会增加切换时间, 但改变寄存器的代价是不可忽视的
+* go调度器和任何现代操作系统的调度器都是O(1)复杂度的, 这意味着增加线程/goroutine的数量不会增加切换时间, 但改变寄存器的代价是不可忽视的
 
 资源
 * os thread竞争的'CPU'资源是真实的物理CPU
@@ -117,27 +113,27 @@ __用户线程 和 内核线程 的关系 及映射模型__
 
  * G (Goroutine): 我们所说的协程, 每个Goroutine对象中的sched保存着其上下文信息. 每个Goroutine对应一个G结构体, G存储Goroutine的运行堆栈、状态以及任务函数, 可重用. G并非执行体, 每个G需要绑定到P才能被调度执行. goroutine stack的size默认设置为2k
 
- * M (Machine): 也是一个用户线程, 是对内核线程的封装, 他和真实内核线程是1:1的关系. 数量对应真实的CPU数. 代表着真正执行计算的资源, 在绑定有效的P逻辑处理器后进入调度循环. 而M本身是由操作系统来调度的. runtime对goroutine的调度机制大致是从全局队列、逻辑处理器P的本地队列以及wait队列中获取G, 切换到G的执行栈上并执行G的函数, 调用goexit做清理工作并回到M, 如此反复. M并不保留G状态, 这是G可以跨M调度的基础. M的数量是不定的, 由Go Runtime调整, 为了防止创建过多OS线程导致系统调度不过来, 目前默认最大限制为10000个
+ * M (Machine): 也是一个用户线程, 是对内核线程的封装, 他和真实内核线程是1:1的关系. 数量对应真实的CPU数. 代表着真正执行计算的资源, 在绑定有效的P逻辑处理器后进入调度循环. 而M是间接的通过操作系统来调度的. runtime对goroutine的调度机制大致是从全局队列、逻辑处理器P的本地队列以及wait队列中获取G, 切换到G的执行栈上并执行G的函数, 调用goexit做清理工作并回到M, 如此反复. M并不保留G状态, 这是G可以跨M调度的基础. M的数量是不定的, 由Go Runtime调整, 为了防止创建过多OS线程导致系统调度不过来, 目前默认最大限制为10000个
 
  * P (Processor): 即为G和M的调度对象, 用来调度G和M之间的关联关系. 对G来说, P逻辑处理器相当于CPU核, G只有绑定到P逻辑处理器才能被调度. 对M来说, P提供了相关的执行环境(context), 如内存分配状态(mcache), 任务队列(G)等, P的数量决定了系统内最大可并行的G的数量(前提: 物理CPU核数 >= P的数量), P的数量由GOMAXPROCS决定, 但是不论GOMAXPROCS设置为多大, P的数量最大为256. P可以类比openresty里边nginx的worker
 
 
 ### Go Scheduler
-在 Go 的早期版本, 并没有 P 这个结构体, M 必须从一个全局的队列里获取要运行的 G, 因此需要获取一个全局的锁, 当并发量大的时候锁就成了瓶颈. 后来在 Go1.1 的实现里加上了 P 结构体, 每个 P 自己维护一个处于 Runnable 状态的 G 的队列, 解决了原来的全局锁问题. 但是global runable goroutine queue 依然存在.
+在 Go 的早期版本, 并没有 P 这个概念, M 必须从一个全局的队列里获取要运行的 G, 因此需要获取一个全局的锁, 当并发量大的时候锁就成了瓶颈. 后来在 Go1.1 的实现里加上了 P 结构体, 每个 P 自己维护一个处于 Runnable 状态的 G 的队列, 解决了原来的全局锁问题. 但是global runable goroutine queue 依然存在.
 
 ![goroutine调度图](./pic/gpm.jpg)
-* busy
+* Busy  
 P 每次从「可被执行的 goroutine 队列」中选取一个 goroutine 调度到 M 执行. 当前的 goroutine 被执行完成之后将从队列中弹出, P 会不断的重复上述的过程处理 goroutine. M 上都有正在运行的 G，没有空闲的 P，也没有空闲的M
 ![busy_scheduler.png](./pic/busy_scheduler.png)
 
-* idle
+* Idle  
 部分 P 中挂载的 local runable queue已经没有剩余的 goroutine 可供调度, 为了能够让所有的 M 的利用率达到最大, golang runtime 会采取以下两种机制来处理 idle 状态:
   * 定时从 global runable queue 中选取 goroutine
 
   * 若 global runable queue 中也没有 goroutine, 随机选取选取一个 P, 从其挂载的 local runable queue 中 steal 走一半的 goroutine
 
-* Channle 阻塞
-  * 当Goroutine因为Channel操作而阻塞(通过gopark)时, 对应的G会被放置到某个wait队列(如channel的waitq), 该G的状态由runing变为waitting, 而M会跳过该G尝试获取并执行下一个G
+* Channle block
+  * 当Goroutine因为Channel操作而阻塞(通过gopark)时, 对应的G会被放置到某个wait队列(如channel的waitq), 该G的状态由runing变为waitting, 而M会跳过该G尝试获取并执行下一个G(因为channel是用户层面的实现不涉及内核)
 
   * 当阻塞的G被G2唤醒(通过goready)时(比如channel可读/写), G会尝试加入G2所在的P, 然后再是P Local队列和Global队列
 
@@ -206,9 +202,9 @@ SCHED 11067ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads
 * 4026ms：即从程序启动到输出这行日志的时间
 * gomaxprocs: P 的数量
 * idleprocs: 处于 idle 状态的 P 的数量
-* threads:   os threads 的数量，包含 scheduler 使用的 m 数量，加上 runtime 自用的类似 sysmon 这样的 thread 的数量
-* spinningthreads: 处于自旋状态的 os thread 数量
-* idlethread: 处于 idle 状态的 os thread 的数量
+* threads:   kenel threads 的数量，包含 scheduler 使用的 m 数量，加上 runtime 自用的类似 sysmon 这样的 thread 的数量
+* spinningthreads: 处于自旋状态的 kenel thread 数量
+* idlethread: 处于 idle 状态的 kenel thread 的数量
 * runqueue： go scheduler 全局队列中 G 的数量
 * [0 0 0 0 0 0 0 0]: 分别为8个 P 的 local queue 中的 G 的数量
 
