@@ -53,26 +53,26 @@ net/http/pprof库   
 go test -bench . -cpuprofile  prof.cpu 生成采样文件   
 
 __go tool pprof__ 
-*  pprof <format> [options] [binary] <source>
- go tool pprof -png http://10.233.x5.153:8098/debug/pprof/profile  
+*  pprof <format> [options] [binary] <source>  
+ go tool pprof -png http://10.233.x5.153:8098/debug/pprof/profile   
  生成一个指定格式的文件
  
-* pprof [options] [binary] <source>
-go tool pprof http://10.233.x5.153:8098/debug/pprof/profile  
-get an interactive shell whose commands can be used to generate various views of a profile
+* pprof [options] [binary] <source>  
+go tool pprof http://10.233.x5.153:8098/debug/pprof/profile    
+get an interactive shell whose commands can be used to generate various views of a profile  
 生成一个终端互动界面, 根据命令可以选择查看各种采样信息
 
-* pprof -http [host]:[port] [options] [binary] <source>
-go tool pprof -http :8080  http://10.233.x5.153:8098/debug/pprof/profile   
-get an interactive web interface at the specified host:port that can be used to navigate through various views of a profile.   
+* pprof -http [host]:[port] [options] [binary] <source>  
+go tool pprof -http :8080  http://10.233.x5.153:8098/debug/pprof/profile     
+get an interactive web interface at the specified host:port that can be used to navigate through various views of a profile.     
 生成一个互动的web界面, 可以在浏览器查看各种采样信息
 
-* pprof <source>
-根据已经生成的profile文件进行分析  
-go tool pprof cpu.profile
+* pprof <source>  
+根据已经生成的profile文件进行分析    
+go tool pprof cpu.profile  
 
 #### 终端样本分析
-* go tool pprof http://10.233.x5.153:8098/debug/pprof/profile
+* go tool pprof http://10.233.x5.153:8098/debug/pprof/profile  
 ![终端样本分析](./pic/terminal.png)
 
 * File 表示采集的程序
@@ -111,11 +111,14 @@ $ go tool pprof -png cpu.pprof
 
 * 生成方式
 
-  * Capture stacks-捕获堆栈: go tool pprof -raw -output=cpu.pprof  http://10.233.x5.153:8089/debug/pprof/profile?seconds=5
+  * Capture stacks-捕获堆栈  
+  go tool pprof -raw -output=cpu.pprof  http://10.233.x5.153:8089/debug/pprof/profile?seconds=5
 
-  * Fold stacks-折叠堆栈: stackcollapse-go.pl   cpu.pprof > cpu.folded
+  * Fold stacks-折叠堆栈  
+  stackcollapse-go.pl   cpu.pprof > cpu.folded
 
-  * flamegraph.pl-生成svg: flamegraph.pl  go_cpu.folded > cpu.svg   
+  * flamegraph.pl-生成svg  
+  flamegraph.pl  go_cpu.folded > cpu.svg   
   
 ![可视化样本分析](./pic/cpu.svg)
 
