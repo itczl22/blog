@@ -1,6 +1,6 @@
-在计算机性能调试领域里, profiling 就是对应用的画像, 这里画像就是应用使用 CPU 和内存等的情况. 也就是说应用使用了多少 CPU 资源、都是哪些部分在使用?每个函数使用的比例是多少、有哪些函数在等待 CPU 资源等. 知道了这些, 我们就能对应用进行规划, 也能快速定位性能瓶颈.   
+在计算机性能调试领域里, profiling 就是服务的画像, 这里画像就是服务使用 CPU 和内存等的情况. 也就是说服务使用了多少 CPU 资源、都是哪些部分在使用?每个函数使用的比例是多少、有哪些函数在等待 CPU 资源等. 知道了这些, 我们就能对应用进行规划, 也能快速定位性能瓶颈.   
 
-在 go 语言中, 主要关注的应用运行情况主要包括以下几种
+在 go 语言中, 主要关注的服务运行情况主要包括以下几种
 * CPU profile  
 程序的 CPU 使用情况, 按照一定频率去采集应用程序在 CPU 和寄存器上面的数据  
 
@@ -44,8 +44,8 @@ net/http/pprof库   
   import _ "net/http/pprof"
   
   go func() {
-    log.Println(&quot;begin listening 8020...&quot;)            
-    http.ListenAndServe(&quot;:8020&quot;, nil)            
+    log.Println("begin listening 8020...")
+    http.ListenAndServe(":8020", nil)            
   }()
 ```
 
